@@ -1,0 +1,32 @@
+row {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+}
+row:not(:last-child) {
+  margin-bottom: 10px;
+}
+row [class^=col-]:not(:last-child) {
+  margin-right: 10px;
+}
+row .col-full-width {
+  width: 100%;
+}
+row .col-1-of-2 {
+  flex: 0 0 calc((100% - 10px) / 2);
+}
+row .col-1-of-3 {
+  flex: 0 0 calc((100% - 2 * 10px) / 3);
+}
+row .col-2-of-3 {
+  flex: 0 0 calc(2 * ((100% - 2 * 10px) / 3) + 10px);
+}
+row .col-1-of-4 {
+  flex: 0 0 calc((100% - 3 * 10px) / 4);
+}
+row .col-2-of-4 {
+  flex: 0 0 calc(2 * ((100% - 3 * 10px) / 4) + 10px);
+}
+row .col-3-of-4 {
+  flex: 0 0 calc(3 * ((100% - 3 * 10px) / 4) + (10px * 2));
+}

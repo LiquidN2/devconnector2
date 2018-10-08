@@ -28,9 +28,9 @@ const dbOptions = { useNewUrlParser: true };
 
 // Connect to MongoDB
 mongoose
-    .connect(db, dbOptions)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.log('Unable to connect to MongoDB'));
+	.connect(db, dbOptions)
+	.then(() => console.log('Connected to MongoDB'))
+	.catch(err => console.log('Unable to connect to MongoDB'));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -45,20 +45,20 @@ app.use('/api/posts', posts);
 
 // server static assets if in production
 if (env === 'production') {
-    // set static folder
-    app.use(express.static('client/build'));
-    
-    app.get('*', (req, res) => {
-        const clientIndexHtml = path.resolve(__dirname, 'client', 'build', 'index.html');
-        res.sendFile(clientIndexHtml);
-    });
+	// set static folder
+	app.use(express.static('client/build'));
+
+	app.get('*', (req, res) => {
+		const clientIndexHtml = path.resolve(__dirname, 'client', 'build', 'index.html');
+		res.sendFile(clientIndexHtml);
+	});
 }
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
-    console.log(`**** ${env.toUpperCase()} ****`);
-    console.log(`server running at localhost:${port}`);
-    // console.log(process.env.MONGODB_URI);
+	console.log(`**** ${env.toUpperCase()} ****`);
+	console.log(`server running at localhost:${port}`);
+	// console.log(process.env.MONGODB_URI);
 });
 
 module.exports = app;

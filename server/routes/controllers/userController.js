@@ -71,7 +71,7 @@ const userLogin = (req, res) => {
                 token: `Bearer ${token}`
             });
         })
-        .catch(err => res.status(400).send());   
+        .catch(err => res.status(400).send(err));   
 };
 
 const userCurrentGet = (req, res) => {

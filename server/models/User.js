@@ -75,29 +75,48 @@ userSchema.methods.generateToken = function() {
 userSchema.statics.findByCredential = function(email, password) {
     const User = this;
     let errors = {}; 
-    let foundUser;
+    
+    return User.findOne({ email })
+        .then(user => {
+            if(!user) {
+                errors.email = 'Email not found. Please sign up or try another email';
+                return Promise.reject(errors);
+            } 
 
-    return new Promise((resolve, reject) => {
-        User.findOne({ email })
-            .then(user => {
-                if(!user) {
-                    errors.email = 'Email not found. Please sign up or try another email.';
-                    return reject(errors);
-                }
+            return new Promise((resolve, reject) => {
+                bcrypt.compare(password, user.password, (err, res) => {
+                    if (err || !res) {
+                        errors.password = 'Incorrect password';
+                        return reject(errors);
+                    }
 
-                foundUser = user;
-                return bcrypt.compare(password, user.password);
-            })
-            .then(passwordIsMatch => {
-                if (!passwordIsMatch) {
-                    errors.password = 'Incorrect password';
-                    return reject(errors);
-                }
+                    return resolve(user);
+                });
+            });
+        });
+    
+    // let foundUser;
+    // return new Promise((resolve, reject) => {
+    //     User.findOne({ email })
+    //         .then(user => {
+    //             if(!user) {
+    //                 errors.email = 'Email not found. Please sign up or try another email';
+    //                 return reject(errors);
+    //             } else {
+    //                 foundUser = user;
+    //                 return bcrypt.compare(password, user.password);
+    //             }
+    //         })
+    //         .then(passwordIsMatch => {
+    //             if (!passwordIsMatch) {
+    //                 errors.password = 'Incorrect password';
+    //                 return reject(errors);
+    //             }
                 
-                return resolve(foundUser);
-            })
-            .catch(err => reject());
-    });
+    //             return resolve(foundUser);
+    //         })
+    //         .catch(err => reject());
+    // });
 
 };
 
