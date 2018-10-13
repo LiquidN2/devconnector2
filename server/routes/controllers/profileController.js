@@ -15,6 +15,16 @@ const profileCurrentGet = (req, res) => {
                 errors.profile = 'User profile not found';
                 return res.status(404).json(errors);
             }
+            
+            // sort experience from newer to older
+            profile.experience.sort((a, b) => {
+                return b.from - a.from;
+            });
+
+            // sort education from newer to older
+            profile.education.sort((a, b) => {
+                return b.from - a.from;
+            });
 
             return res.status(200).json(profile);
         })
@@ -46,6 +56,16 @@ const profileByHandleGet = (req, res) => {
                 return res.status(404).json(errors);
             }
 
+            // sort experience from newer to older
+            profile.experience.sort((a, b) => {
+                return b.from - a.from;
+            });
+
+            // sort education from newer to older
+            profile.education.sort((a, b) => {
+                return b.from - a.from;
+            });
+
             return res.status(200).json(profile);
         })
         .catch(err => res.status(404).json({ profile: 'User does not exist' }));
@@ -61,6 +81,16 @@ const profileByUserIdGet = (req, res) => {
                 errors.noprofile = 'User does not exist';
                 return res.status(404).json(errors);
             }
+
+            // sort experience from newer to older
+            profile.experience.sort((a, b) => {
+                return b.from - a.from;
+            });
+
+            // sort education from newer to older
+            profile.education.sort((a, b) => {
+                return b.from - a.from;
+            });
 
             return res.status(200).json(profile);
         })
@@ -99,17 +129,21 @@ const profileCreatePost = (req, res) => {
     if (req.body.instagram) profileFields.social.instagram = req.body.instagram.trim();
     
     Profile.findOne({ user: profileFields.user })
+        
         .then(profile => {
             // update existing profile
             if (profile) {
                 const condition = { user: profile.user };
                 const update = { $set: profileFields };
                 const option = { new: true };
-                return Profile.findOneAndUpdate(condition, update, option);
+                // return all profile fields except education and experience
+                return Profile.findOneAndUpdate(condition, update, option).populate('user', ['name', 'email', 'avatar']).select({ experience: 0, education: 0 });
             }
 
-            // create new if does not exist
+            // create new if does not exist and return all profile fields except education and experience when created
             return Profile.findOne({ handle: profileFields.handle })
+                .select({ experience: 0, education: 0 })
+                .populate('user', ['name', 'email', 'avatar'])
                 .then(profile => {
                     if (profile) {
                         errors.handle = 'Handle taken';

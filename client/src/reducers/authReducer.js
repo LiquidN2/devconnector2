@@ -5,7 +5,8 @@ import {
     USER_LOGIN_REQUEST, 
     USER_LOGIN_SUCCESS,
     USER_LOGIN_ERROR,
-    USER_LOGOUT
+    USER_LOGOUT,
+    GET_LOGIN_ERRORS
 } from './../constants/actionTypes';
 
 const token = localStorage.getItem('token');
@@ -26,7 +27,8 @@ const authReducer = (state = initialState, action) => {
                 user: {}
             };
         
-        case USER_LOGIN_ERROR:
+        // case USER_LOGIN_ERROR:
+        case GET_LOGIN_ERRORS:
         case USER_LOGOUT:
             return {
                 ...state,

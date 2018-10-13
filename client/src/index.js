@@ -7,14 +7,12 @@ import * as serviceWorker from './serviceWorker';
 
 import { store } from './store';
 
-// import './styles/layout/grid.css';
-// import './styles/main.scss';
+import moment from 'moment';
+import 'moment/locale/en-au';
+moment.locale('en-au');
 
-// const store = configureStore();
-// store.dispatch(userLoginAsync({email: 'hhnguyen255@gmail.com', password: 'Abcd1234'}))
-//     .then(res => {
-//         console.log(store.getState());
-//     });
+console.log(typeof moment('Oct2000', 'MMMYYYY').valueOf())
+console.log(moment(970318800000).format())
 
 const JSX = (
     <Provider store={store}>

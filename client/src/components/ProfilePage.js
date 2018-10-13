@@ -1,130 +1,118 @@
-import React from 'react';
-import axios from 'axios';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userLogout } from './../actions/authActions';
+import { Link } from 'react-router-dom';
 
-import Header from './layout/Header';
+// load components
+import Header from './header/Header';
 import ProfileBase from './profile/ProfileBase';
 import ProfileSummary from './profile/ProfileSummary';
 import ProfileExperience from './profile/ProfileExperience';
 import ProfileEducation from './profile/ProfileEducation';
 import ProfileSkills from './profile/ProfileSkills';
+import Loading from './Loading';
 
-const profile = {
-    _id : "5badbd71b31a6f3c98ed24b9",
-    skills: [ "html", "css", "javascript", "nodejs", "reactjs", "python", "php"],
-    user : "5badbd34b31a6f3c98ed24b8",
-    bio: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi! Ea, culpa rem quae officiis distinctio animi nihil.",
-    handle : "hughnguyen",
-    website : "hnguyen.com.au",
-    status : "junior dev",
-    experience : [{
-        _id: "1",
-        title: "Research Assistant",
-        company: "MGH",
-        location: "Boston MA",
-        from: "01/07/2008",
-        to: "30/06/2009",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    },{
-        _id: "2",
-        title: "Research Assistant",
-        company: "MGH",
-        location: "Boston MA",
-        from: "01/07/2008",
-        to: "30/06/2009",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    },{
-        _id: "3",
-        title: "Research Assistant",
-        company: "MGH",
-        location: "Boston MA",
-        from: "01/07/2008",
-        to: "30/06/2009",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    }],
+import setAuthToken from './../utils/setAuthToken';
 
-    education : [{
-        _id: "1",
-        degree: "Master of Commerce",
-        fieldOfStudy: "Commerce Accounting",
-        school: "The University of Sydney",
-        location: "Boston MA",
-        from: "11/07/2011",
-        to: "31/12/2012",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    },{
-        _id: "2",
-        degree: "Master of Commerce",
-        fieldOfStudy: "Commerce Accounting",
-        school: "The University of Sydney",
-        location: "Boston MA",
-        from: "11/07/2011",
-        to: "31/12/2012",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    },{
-        _id: "3",
-        degree: "Master of Commerce",
-        fieldOfStudy: "Commerce Accounting",
-        school: "The University of Sydney",
-        location: "Boston MA",
-        from: "11/07/2011",
-        to: "31/12/2012",
-        current: false,
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit inventore dolor voluptates in deleniti, dicta ullam sapiente tempore reprehenderit reiciendis hic excepturi!"
-    }],
-}
+import { getCurrentUserProfileAsync } from './../actions/profileActions';
 
+class ProfilePage extends Component {
+    componentDidMount() {
+        setAuthToken(localStorage.getItem('token'));
+        if (!this.props.profile._id) {
+            this.props.getCurrentUserProfileAsync();
+        }
+    }
 
-const ProfilePage = props => {
-    
-    // const getProfiles = () => {
-    //     axios.get('api/profile', {
-    //         headers: {
-    //             'Authorization': localStorage.getItem('token')
-    //         }
-    //     })
-    //         .then(res => console.log(res.data))
-    //         .catch(err => console.log(err))
-    // }
+    render() {
+        const { isFetching: isFetchingProfile } = this.props;
+        
+        const profileBase = {
+            user: this.props.profile.user,
+            githubUser: this.props.profile.githubUser,
+            handle: this.props.profile.handle,
+            website: this.props.profile.website,
+            location: this.props.profile.location,
+            social: this.props.profile.social
+        };
 
-    return (
-        <React.Fragment>
-            <Header />
-            <section className="section-profile">
-                <div className="container row u-padding-top-2rem">
-                    <div className="col-1-of-4">
-                        <div className="row">
-                            <ProfileBase />
-                        </div>                
-                    </div>
-                    <div className="col-2-of-4">
-                        <div className="row">
-                            <ProfileSummary boxTitle="Summary" text={profile.bio}/>
+        const { bio, skills, experience, education } = this.props.profile;
+
+        return (
+            <React.Fragment>
+                <Header />
+                <section className="section-profile">
+
+                    {
+                        isFetchingProfile ? (
+                            <div className="container u-margin-bottom-3rem">
+                                <Loading />
+                            </div>
+                        ) : (
+                            null
+                        )
+                    }
+
+                    <div className="container row">
+                        <div className="col-1-of-4">
+                            <div className="row">
+                                { 
+                                    this.props.profile._id ? (
+                                        <ProfileBase {...profileBase} />
+                                    ) : (
+                                        null
+                                    )
+                                }
+                            </div>
+                            <div className="row">
+                                <Link to="/profile/edit" className="btn btn--color-primary btn--full u-center-text">
+                                    Edit Profile
+                                </Link>
+                            </div>
                         </div>
-                        <div className="row">
-                            <ProfileExperience boxTitle="Experience" experiences={profile.experience}/>
+
+                        <div className="col-2-of-4">
+                            <div className="row">
+                                <ProfileSummary 
+                                    boxTitle="Summary" 
+                                    text={bio || ''} 
+                                />
+                            </div>
+                            <div className="row">
+                                <ProfileExperience 
+                                    boxTitle="Experience" 
+                                    experiences={experience || []} 
+                                />
+                            </div>
+                            <div className="row">
+                                <ProfileEducation 
+                                    boxTitle="Education" 
+                                    educations={education || []} 
+                                />
+                            </div>
                         </div>
-                        <div className="row">
-                            <ProfileEducation boxTitle="Education" educations={profile.education}/>
+                        
+                        <div className="col-1-of-4">
+                            <div className="row">
+                                <ProfileSkills 
+                                    boxTitle="Skills" 
+                                    skills={skills || []} 
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="col-1-of-4">
-                        <div className="row">
-                            <ProfileSkills boxTitle="Skills" skills={profile.skills} />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </React.Fragment>
-    )
+                </section>
+            </React.Fragment>
+        );
+    }
 };
 
-const mapDispatchToProps = { userLogout };
+const mapStateToProps = state => {
+    return {
+        isFetching: state.profile.isFetching,
+        profile: state.profile.profile
+    }
+}
 
-export default connect(undefined, mapDispatchToProps)(ProfilePage);
+const mapDispatchToProps = { getCurrentUserProfileAsync };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

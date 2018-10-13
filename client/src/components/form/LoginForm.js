@@ -9,18 +9,15 @@ class LoginForm extends React.Component {
         password: ''
     };
 
-    onEmailChange = event => {
-        const email = event.target.value;
-        this.setState(() => {
-            return { email };
-        });
-    };
+    handleInputChange = event => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
 
-    onPasswordChange = event => {
-        const password = event.target.value;
-        this.setState(() => {
-            return { password };
-        });
+        this.setState(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
     onSubmit = event => {
@@ -45,20 +42,17 @@ class LoginForm extends React.Component {
                         <div className="form__group">
                             <ControlledEmailInput 
                                 email={this.state.email} 
-                                onChange={this.onEmailChange}
+                                onChange={this.handleInputChange}
                             />
                         </div>
                         <div className="form__group">
                             <ControlledPasswordInput 
                                 password={this.state.password} 
-                                onChange={this.onPasswordChange}
+                                onChange={this.handleInputChange}
                             />
                         </div>
                         <div className="form__group">
-                            <button
-                                id="login"
-                                className="btn btn--login btn--color-primary"
-                            >
+                            <button id="login" className="btn btn--login btn--color-primary">
                                 Login
                             </button>
                         </div>

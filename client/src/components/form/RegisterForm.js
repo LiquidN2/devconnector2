@@ -12,57 +12,26 @@ class RegisterForm extends React.Component {
         agreetc: false
     };
 
-    onNameChange = event => {
-        const name = event.target.value;
-        this.setState(() => {
-            return { name };
-        });
-    };
+    handleInputChange = event => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
 
-    onEmailChange = event => {
-        const email = event.target.value;
-        this.setState(() => {
-            return { email };
-        });
+        this.setState(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
-
-    onPasswordChange = event => {
-        const password = event.target.value;
-        this.setState(() => {
-            return { password };
-        });
-    };
-
-    onPassword2Change = event => {
-        const password2 = event.target.value;
-        this.setState(() => {
-            return { password2 };
-        });
-    };
-
-    onAgreeTC = event => {
-        const isAgreed = event.target.checked;
-        this.setState(() => {
-            return {
-                agreetc: isAgreed
-            };
-        });
-    }
 
     onSubmit = event => {
         event.preventDefault();
-        const newUser = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password,
-            password2: this.state.password2
-        };
+        const { name, email, password, password2 } = this.state;
+        const newUser = { name, email, password, password2 };
         
         if (this.state.agreetc) {
             this.props.onSubmit(newUser);
         }
     }
-
 
     render() {
 
@@ -77,33 +46,33 @@ class RegisterForm extends React.Component {
                             <ControlledTextInput 
                                 fieldName='name' 
                                 fieldValue={this.state.name} 
-                                onChange={this.onNameChange}
+                                onChange={this.handleInputChange}
                                 placeholder='name'    
                             />
                         </div>
                         <div className="form__group">
                             <ControlledEmailInput 
                                 email={this.state.email} 
-                                onChange={this.onEmailChange}
+                                onChange={this.handleInputChange}
                             />
                         </div>
                         <div className="form__group">
                             <ControlledPasswordInput 
                                 password={this.state.password} 
-                                onChange={this.onPasswordChange}
+                                onChange={this.handleInputChange}
                             />
                         </div>
                         <div className="form__group">
                             <ControlledPassword2Input 
                                 password2={this.state.password2} 
-                                onChange={this.onPassword2Change}
+                                onChange={this.handleInputChange}
                             />
                         </div>
 
                         <div className="form__group">
                             <label htmlFor="agreetc" className="checkbox-container">
                                 Agree Terms and Conditions
-                                <input type="checkbox" name="agreetc" id="agreetc" required onChange={this.onAgreeTC}/>
+                                <input type="checkbox" name="agreetc" id="agreetc" onChange={this.handleInputChange} required/>
                                 <span className="checkbox-checkmark"></span>
                             </label>
                         </div>

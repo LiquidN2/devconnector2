@@ -1,17 +1,20 @@
 import {
-    GET_ERRORS,
+    // GET_ERRORS,
     GET_LOGIN_ERRORS,
     GET_REGISTER_ERRORS,
     CLEAR_ERRORS,
     CLEAR_LOGIN_ERRORS,
-    CLEAR_REGISTER_ERRORS
+    CLEAR_REGISTER_ERRORS,
+    GET_CURRENT_USER_PROFILE_ERRORS,
+    CURRENT_USER_PROFILE_UPDATE_ERRORS
 } from './../constants/actionTypes';
 
 
 // const initialState = {};
 const initialState = {
     login: {},
-    register: {}
+    register: {},
+    profile: {}
 };
 
 const errorReducer = (state = initialState, action) => {
@@ -45,7 +48,14 @@ const errorReducer = (state = initialState, action) => {
                 ...state,
                 register: {}
             };
-        
+
+        case GET_CURRENT_USER_PROFILE_ERRORS:
+        case CURRENT_USER_PROFILE_UPDATE_ERRORS:
+            return {
+                ...state,
+                profile: action.errors
+            };
+            
         default:
             return state;
     }

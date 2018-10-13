@@ -46,6 +46,11 @@ const experienceAllGet = (req, res) => {
             return res.status(404).json(errors);
         }
 
+        // sort experience from newer to older
+        profile.experience.sort((a, b) => {
+            return b.from - a.from;
+        });
+
         return res.status(200).json(profile.experience);
     }).catch(err => res.status(400).send());
 }
@@ -63,7 +68,7 @@ const experienceCreate = (req, res) => {
     if (req.body.company) newExperience.company = req.body.company.trim();
     if (req.body.location) newExperience.location = req.body.location.trim();
     if (req.body.description) newExperience.description = req.body.description.trim();
-    if (req.body.from) newExperience.from = new Date(req.body.from.trim());
+    if (req.body.from) newExperience.from = new Date(parseInt(req.body.from.trim()));
     if (req.body.to) newExperience.to = new Date(req.body.to.trim());
     if (req.body.current) newExperience.current = !!req.body.current;
 

@@ -21,6 +21,11 @@ const educationAllGet = (req, res) => {
             return res.status(404).json(errors);
         }
 
+        // sort education from newer to older
+        profile.education.sort((a, b) => {
+            return b.from - a.from;
+        });
+
         return res.status(200).json(profile.education);
     }).catch(err => res.status(400).send());
 }

@@ -43,29 +43,101 @@ export const ControlledPassword2Input = props => {
 };
 
 export const ControlledTextInput = props => {
-    if (props.required) {
-        return (
-            <input
-                type="text"
-                name={props.fieldName}
-                className="form__input"
-                placeholder={props.placeholder}
-                value={props.fieldValue}
-                onChange={props.onChange}
-                required
-            />
-        );
-    } else {
-        return (
-            <input
-                type="text"
-                name={props.fieldName}
-                className="form__input"
-                placeholder={props.placeholder}
-                value={props.fieldValue}
-                onChange={props.onChange}
-            />
-        );
-    }
+    return (
+        <input
+            type="text"
+            name={props.fieldName}
+            id={props.fieldId}
+            className={props.className || "form__input"}
+            placeholder={props.placeholder || ''}
+            value={props.fieldValue}
+            onChange={props.onChange}
+            required={props.required}
+            disabled={props.isDisabled}
+        />
+    );
 };
 
+
+export const ControlledTextArea = props => {
+    const resize = {
+        resize: props.resize
+    };
+
+    return (
+        <textarea
+            rows={props.rows}
+            style={resize}
+            name={props.fieldName}
+            id={props.fieldId}
+            value={props.fieldValue}
+            className={props.className || "form__input"}
+            placeholder={props.placeholder || ''}
+            onChange={props.onChange}
+            required={props.required}
+            disabled={props.isDisabled}
+        />
+    );
+}
+
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export const ControlledMonthDropDown = props => {
+    return (
+        <select 
+            name={props.fieldName}
+            id={props.fieldId}
+            value={props.fieldValue}
+            className={props.className || "form__input"} 
+            onChange={props.onChange}
+            required={props.required}
+            disabled={props.isDisabled}
+        >
+            <option value="">- select month -</option>
+            {
+                months.map((month, index) => {
+                    return (
+                        <option 
+                            key={index} 
+                            value={month}
+                        >
+                            {month}
+                        </option>
+                    );
+                })
+            }
+        </select>
+    );
+};
+
+const years = [];
+for (let i = (new Date()).getFullYear(); i >= 1900; i--) {
+    years.push(i);
+}
+export const ControlledYearDropDown = props => {
+    return (
+        <select 
+            name={props.fieldName}
+            id={props.fieldId}
+            value={props.fieldValue}
+            className={props.className || "form__input"} 
+            onChange={props.onChange}
+            required={props.required}
+            disabled={props.isDisabled}
+        >
+            <option value="">- select year -</option>
+            {
+                years.map((year, index) => {
+                    return (
+                        <option 
+                            key={index} 
+                            value={year}
+                        >
+                            {year}
+                        </option>
+                    );
+                })
+            }
+        </select>
+    );
+};

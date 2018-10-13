@@ -1,15 +1,22 @@
 import React from 'react';
 
+import ProfileBoxHeader from './ProfileBoxHeader';
+
 const ProfileBox = ProfileBoxContentComponent => {
     return class extends React.Component {
         render() {
+            const className = this.props.withTools ? 'profile-edit' : 'profile-box';
+
             return (
-                <div className="profile-box">
-                    <h2 className="profile-heading u-margin-bottom-3rem">{this.props.boxTitle}</h2>
-                    <hr className="profile-text-separater" />
+                <div className={className}>
+                    <ProfileBoxHeader
+                        boxTitle={this.props.boxTitle} 
+                        withTools={this.props.withTools}
+                        onAddNewItem={this.props.onAddNewItem}
+                    />
                     <ProfileBoxContentComponent {...this.props} />
                 </div>
-            )
+            );
         }
     }
 };

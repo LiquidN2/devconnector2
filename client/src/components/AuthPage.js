@@ -8,8 +8,4 @@ const AuthPage = () => {
     );
 };
 
-const mapStateToProps = state => {
-
-}
-
 export default connect()(AuthPage);
