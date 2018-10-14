@@ -44,8 +44,8 @@ class UserNavProfile extends Component {
 
 const mapStateToProps = state => {
     return {
-        avatar: state.profile.profile.user ? state.profile.profile.user.avatar : '',
-        name: state.profile.profile.user ? state.profile.profile.user.name : ''
+        avatar: state.user.user ? state.user.user.avatar : '',
+        name: state.user.user ? state.user.user.name : ''
     }
 };
 

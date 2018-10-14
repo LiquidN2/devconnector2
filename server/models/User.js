@@ -49,8 +49,8 @@ userSchema.methods.generateToken = function() {
     const user = this;
 
     const payload = { 
-        _id: user._id.toHexString(),
-        email: user.email
+        _id: user._id.toHexString()
+        // ,email: user.email
     };
 
     const secretOrPrivateKey = process.env.JWT_SECRET;

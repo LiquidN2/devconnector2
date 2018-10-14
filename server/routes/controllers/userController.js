@@ -75,8 +75,8 @@ const userLogin = (req, res) => {
 };
 
 const userCurrentGet = (req, res) => {
-    const { _id, email, name } = req.user;
-    res.status(200).send({ _id, email, name });
+    const { _id, email, name, avatar } = req.user;
+    res.status(200).send({ _id, email, name, avatar });
 };
 
 module.exports = {

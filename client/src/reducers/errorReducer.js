@@ -5,6 +5,7 @@ import {
     CLEAR_ERRORS,
     CLEAR_LOGIN_ERRORS,
     CLEAR_REGISTER_ERRORS,
+    SET_CURRENT_USER_ERRORS,
     GET_CURRENT_USER_PROFILE_ERRORS,
     CURRENT_USER_PROFILE_UPDATE_ERRORS
 } from './../constants/actionTypes';
@@ -14,6 +15,7 @@ import {
 const initialState = {
     login: {},
     register: {},
+    user: {},
     profile: {}
 };
 
@@ -55,6 +57,12 @@ const errorReducer = (state = initialState, action) => {
                 ...state,
                 profile: action.errors
             };
+
+        case SET_CURRENT_USER_ERRORS:
+            return {
+                ...state,
+                user: action.errors
+            }
             
         default:
             return state;

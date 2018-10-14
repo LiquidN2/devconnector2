@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ControlledTextInput, ControlledTextArea } from './ControlledInput';
+import Loading from './../Loading';
 
 export default class ProfileMainForm extends Component {
     state = {
@@ -15,7 +16,7 @@ export default class ProfileMainForm extends Component {
         twitter: '',
         instagram: '',
         youtube: '',
-        skills: ''
+        skills: '',
     };
 
     // Set initial state from props when mounted
@@ -160,6 +161,10 @@ export default class ProfileMainForm extends Component {
     };
 
     render() {
+        const classNameBtn = 'btn btn--full';
+        const classNameSaveBtn = this.props.isUpdatingProfile ? `${classNameBtn} btn--disabled` : `${classNameBtn} btn--color-primary`;
+        const classNameResetBtn = this.props.isUpdatingProfile ? `${classNameBtn} btn--disabled` : classNameBtn;
+
         return (
             <div className="profile-edit">
                 <h2 className="profile-heading u-margin-bottom-3rem">Update Your Profile</h2>
@@ -175,7 +180,8 @@ export default class ProfileMainForm extends Component {
                                     fieldId="status"
                                     className="form__input"
                                     fieldValue={this.state.status}
-                                     onChange={this.handleInputChange}
+                                    onChange={this.handleInputChange}
+                                    required={true}
                                 />
                             </div>
                             <div className="form__group">
@@ -305,6 +311,7 @@ export default class ProfileMainForm extends Component {
                                     resize="vertical"
                                     fieldValue={this.state.skills}
                                     onChange={this.handleInputChange}
+                                    required={true}
                                 />
                             </div>
                         </div>
@@ -327,12 +334,25 @@ export default class ProfileMainForm extends Component {
                         </div>
                     </div>
 
+                    { this.props.isUpdatingProfile ? <div className="row"><Loading /></div> : null }
+                    
                     <div className="row">
                         <div className="col-1-of-4 col-offset-1-of-4">
-                            <button className="btn btn--full btn--color-primary">Save</button>
+                            <button 
+                                className={classNameSaveBtn} 
+                                disabled={this.props.isUpdatingProfile}
+                            >
+                                Save
+                            </button>
                         </div>
                         <div className="col-1-of-4">
-                            <button className="btn btn--full" onClick={this.onHandleClearForm}>Clear Form</button>
+                            <button 
+                                className={classNameResetBtn} 
+                                onClick={this.onHandleClearForm} 
+                                disabled={this.props.isUpdatingProfile}
+                            >
+                                Clear Form
+                            </button>
                         </div>
                     </div>
 

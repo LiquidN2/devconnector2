@@ -68,8 +68,8 @@ const experienceCreate = (req, res) => {
     if (req.body.company) newExperience.company = req.body.company.trim();
     if (req.body.location) newExperience.location = req.body.location.trim();
     if (req.body.description) newExperience.description = req.body.description.trim();
-    if (req.body.from) newExperience.from = new Date(parseInt(req.body.from.trim()));
-    if (req.body.to) newExperience.to = new Date(req.body.to.trim());
+    if (req.body.from) newExperience.from = new Date(req.body.from);
+    if (req.body.to) newExperience.to = new Date(req.body.to);
     if (req.body.current) newExperience.current = !!req.body.current;
 
     const conditions = { user: userId };

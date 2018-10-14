@@ -4,8 +4,17 @@ import SocialItem from './SocialItem';
 
 const ProfileBase = props => {
     const { user, handle, website, location, social, githubUser } = props;
-    const { email } = user;
-    const { linkedin, facebook, twitter, instagram, youtube } = social;
+    let email, linkedin, facebook, twitter, instagram, youtube;
+    if (user) email = user.email;
+    if (social) {
+        linkedin = social.linkedin;
+        facebook = social.facebook;
+        twitter = social.twitter;
+        instagram = social.instagram;
+        youtube = social.youtube;
+    }
+    // const { email } = user;
+    // const { linkedin, facebook, twitter, instagram, youtube } = social;
 
     return (
         <div className="profile-base">

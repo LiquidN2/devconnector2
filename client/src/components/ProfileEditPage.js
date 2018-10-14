@@ -9,28 +9,35 @@ import ProfileMainForm from './form/ProfileMainForm';
 
 import setAuthToken from './../utils/setAuthToken';
 
+import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync, updateCurrentUserProfileAsync } from './../actions/profileActions';
 
 class ProfileEditPage extends Component {
     componentDidMount() {
-        // console.log('component mount');
         setAuthToken(localStorage.getItem('token'));
+
+        // fetching current user
+        if (!this.props.user._id) {
+            this.props.setCurrentUserAsync();
+        }
+
+        // fetching current profile
         if (!this.props.profile._id) {
             this.props.getCurrentUserProfileAsync();
         }
     }
 
     onProfileMainUpdate = profileData => {
-        // console.log(profileData);
+        console.log(profileData);
         this.props.updateCurrentUserProfileAsync(profileData);
     }
 
     render() {
-        const { isFetching: isFetchingProfile, isUpdating: isUpdatingProfile } = this.props;
+        const { isFetchingUser, isFetchingProfile, isUpdatingProfile } = this.props;
 
         const profileBase = {
+            user: this.props.user,
             _id: this.props.profile._id,
-            user: this.props.profile.user,
             githubUser: this.props.profile.githubUser,
             handle: this.props.profile.handle,
             website: this.props.profile.website,
@@ -47,19 +54,17 @@ class ProfileEditPage extends Component {
                 <Header path={this.props.match.path}/>
                 <section className="section-profile">
                     {
-                        (isFetchingProfile || isUpdatingProfile) ? (
+                        (isFetchingUser || isFetchingProfile ) ? (
                             <div className="container u-margin-bottom-3rem">
                                 <Loading />
                             </div>
-                        ) : (
-                                null
-                            )
+                        ) : null
                     }
 
                     <div className="container row">
                         <div className="col-1-of-4">
                             <div className="row">
-                                { this.props.profile._id ? <ProfileBase {...profileBase}/> : null }
+                                { this.props.user._id ? <ProfileBase {...profileBase}/> : null }
                             </div>
                         </div>
 
@@ -71,10 +76,11 @@ class ProfileEditPage extends Component {
                                     skills={skills}
                                     {...profileBase}
                                     onProfileMainUpdate={this.onProfileMainUpdate}
+                                    isUpdatingProfile={isUpdatingProfile}
                                 />
                             ) : (
-                                <ProfileMainForm />
-                             )
+                                <ProfileMainForm onProfileMainUpdate={this.onProfileMainUpdate} />
+                            )
                         }
                         </div>
                     </div>
@@ -86,11 +92,14 @@ class ProfileEditPage extends Component {
 
 const mapStateToProps = state => {
     return {
-        isFetching: state.profile.isFetching,
+        isFetchingUser: state.user.isFetching,
+        user: state.user.user,
+        isFetchingProfile: state.profile.isFetching,
+        isUpdatingProfile: state.profile.isUpdating,
         profile: state.profile.profile
     }
 }
 
-const mapDispatchToProps = { getCurrentUserProfileAsync, updateCurrentUserProfileAsync };
+const mapDispatchToProps = { getCurrentUserProfileAsync, updateCurrentUserProfileAsync, setCurrentUserAsync };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileEditPage);

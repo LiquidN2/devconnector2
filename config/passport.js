@@ -9,10 +9,10 @@ options.secretOrKey = process.env.JWT_SECRET;
 
 const verify = (jwt_payload, done) => {
     // decode jwt to get payload data (_id and email)
-    const { _id, email } = jwt_payload;
+    const { _id } = jwt_payload;
 
     // find existing user in DB using decoded _id and email
-    User.findOne({ _id, email })
+    User.findById(_id)
         .then(user => {
             if (user) {
                 return done(null, user);

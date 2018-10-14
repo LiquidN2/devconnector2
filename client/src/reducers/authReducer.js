@@ -14,7 +14,7 @@ const token = localStorage.getItem('token');
 const initialState = {
     isFetching: false,
     isAuthenticated: tokenIsValid(token) ? true : false,
-    user: tokenIsValid(token) ? jwt_decode(token) : {}
+    tokenPayload: tokenIsValid(token) ? jwt_decode(token) : {}
 };
 
 const authReducer = (state = initialState, action) => {
@@ -24,7 +24,7 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: true,
                 isAuthenticated: false,
-                user: {}
+                tokenPayload: {}
             };
         
         // case USER_LOGIN_ERROR:
@@ -34,7 +34,7 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 isAuthenticated: false,
-                user: {}
+                tokenPayload: {}
             };
         
         case USER_LOGIN_SUCCESS:
@@ -42,7 +42,7 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 isAuthenticated: true,
-                user: action.decodedToken
+                tokenPayload: action.decodedToken
             };
 
         default:

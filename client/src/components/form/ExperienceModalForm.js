@@ -155,16 +155,16 @@ export default class ExperienceModalForm extends Component {
         setTimeout(() => {
             if (!this.state.hasErrors) {
                 const experienceData = {
+                    _id: this.state._id,
                     title: this.state.title,
                     company: this.state.company,
                     location: this.state.location,
-                    formattedFromDate: moment(`${this.state.fromMonth}${this.state.fromYear}`, 'MMMYYYY').valueOf(),
-                    
+                    from: moment(`${this.state.fromMonth}${this.state.fromYear}`, 'MMMYYYY').valueOf(),
                     current: this.state.current,
                 }
 
                 if (!this.state.current) {
-                    experienceData.formattedToDate = moment(`${this.state.toMonth}${this.state.toYear}`, 'MMMYYYY').valueOf();
+                    experienceData.to = moment(`${this.state.toMonth}${this.state.toYear}`, 'MMMYYYY').valueOf();
                 }
     
                 this.props.onExperienceUpdate(experienceData);

@@ -36,10 +36,10 @@ class ProfileExperienceItem extends Component {
                     {
                         this.props.withTools ? (
                             <div className="profile-subheading__icon-box">
-                                <button className="profile-subheading__icon btn-edit-experience" onClick={this.handleEditExperience}>
+                                <button className="profile-subheading__icon btn-icon" onClick={this.handleEditExperience}>
                                     <i className="fas fa-pen"></i>
                                 </button>
-                                <button className="profile-subheading__icon btn-delete-experience">
+                                <button className="profile-subheading__icon btn-icon">
                                     <i className="fas fa-trash-alt"></i>
                                 </button>
                             </div>

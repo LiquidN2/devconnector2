@@ -11,7 +11,7 @@ export default class ProfileBoxHeader extends Component {
                 <React.Fragment>
                     <div className="profile-heading-wrapper u-margin-bottom-3rem">
                         <h2 className="profile-heading">Update {this.props.boxTitle}</h2>
-                        <button id="btn-add-experience" className="profile-edit__icon" onClick={this.onHandleAddItem}>
+                        <button id="btn-add-experience" className="profile-edit__icon btn-icon" onClick={this.onHandleAddItem}>
                             <i className="fas fa-plus fa-lg"></i>
                         </button>
                     </div>

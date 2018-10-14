@@ -58,6 +58,7 @@ export const getCurrentUserProfileAsync = () => {
                 dispatch(setCurrentUserProfile(res.data));
             })
             .catch(err => {
+                console.log(err.response);
                 dispatch(getCurrentUserProfileErrors(err.response.data));
             });
     }
@@ -67,14 +68,28 @@ export const getCurrentUserProfileAsync = () => {
 export const updateCurrentUserProfileAsync = userData => {
     return dispatch => {
         dispatch(currentUserProfileUpdateRequest());
-        return axios.post('/api/profile/', userData)
+        return axios.post('/api/profile', userData)
+            .then(res => {
+                dispatch(currentUserProfileUpdateSuccess());
+                dispatch(setCurrentUserProfile(res.data));
+            })
+            .catch(err => {
+                dispatch(currentUserProfileUpdateErrors(err.response.data));
+            });
+    }
+}
+
+// CREATE NEW Experience - Async
+export const addNewExperienceAsync = newExperienceData => {
+    return dispatch => {
+        dispatch(currentUserProfileUpdateRequest());
+        return axios.post('/api/profile/experience', newExperienceData)
             .then(res => {
                 dispatch(currentUserProfileUpdateSuccess());
                 dispatch(setCurrentUserProfile(res.data));
             })
             .catch(err => {
                 dispatch(currentUserProfileUpdateErrors());
-            });
+            })
     }
 }
-

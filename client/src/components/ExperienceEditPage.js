@@ -11,7 +11,7 @@ import ExperienceModalForm from './form/ExperienceModalForm';
 
 import setAuthToken from './../utils/setAuthToken';
 
-import { getCurrentUserProfileAsync, updateCurrentUserProfileAsync } from './../actions/profileActions';
+import { getCurrentUserProfileAsync, addNewExperienceAsync } from './../actions/profileActions';
 
 
 // bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
@@ -32,9 +32,19 @@ class ExperienceEditPage extends Component {
 
     onExperienceUpdate = experienceData => {
         // this.props.updateCurrentUserProfileAsync(profileData);
-        console.log(experienceData);
+        if (!experienceData._id) {
+            console.log('adding new experience');
+            console.log(experienceData);
+            this.props.addNewExperienceAsync(experienceData);
+        } else {
+            console.log('updating experience');
+            console.log(experienceData);
+        }
+
     }
 
+
+    // 
     onShowItemToEdit = experienceData => {
         // set current exp to state
         this.setState(() => {
@@ -141,6 +151,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getCurrentUserProfileAsync, updateCurrentUserProfileAsync };
+const mapDispatchToProps = { getCurrentUserProfileAsync, addNewExperienceAsync };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExperienceEditPage);
