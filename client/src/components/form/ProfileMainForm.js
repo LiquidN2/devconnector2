@@ -174,7 +174,7 @@ export default class ProfileMainForm extends Component {
                     <div className="row">
                         <div className="col-1-of-2">
                             <div className="form__group">
-                                <label htmlFor="status" className="form__label">Status</label>
+                                <label htmlFor="status" className="form__label form__label--required">Status</label>
                                 <ControlledTextInput
                                     fieldName="status"
                                     fieldId="status"
@@ -213,7 +213,7 @@ export default class ProfileMainForm extends Component {
                     <div className="row">
                         <div className="col-1-of-2">
                             <div className="form__group">
-                                <label htmlFor="handle" className="form__label">Handle</label>
+                                <label htmlFor="handle" className="form__label form__label--required">Handle</label>
                                 <ControlledTextInput
                                     fieldName="handle"
                                     fieldId="handle"
@@ -302,7 +302,7 @@ export default class ProfileMainForm extends Component {
                     <div className="row">
                         <div className="col-full-width">
                             <div className="form__group">
-                                <label htmlFor="skills" className="form__label">Skills</label>
+                                <label htmlFor="skills" className="form__label form__label--required">Skills</label>
                                 <ControlledTextArea
                                     fieldName="skills"
                                     fieldId="skills"

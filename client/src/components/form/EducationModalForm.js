@@ -1,21 +1,44 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-import { ControlledTextInput, ControlledMonthDropDown, ControlledYearDropDown, ControlledTextArea } from './ControlledInput';
+import { 
+    ControlledTextInput, 
+    ControlledMonthDropDown, 
+    ControlledYearDropDown, 
+    ControlledTextArea,
+    ControlledDropDownMenu 
+} from './ControlledInput';
+
+const degreeOptions = [
+    'Certificate',
+    'Associate Degree/ Diploma',
+    'Bachelor Degree',
+    'Bachelor of Arts (BA)',
+    'Bachelor of Science (BS)',
+    'Master Degree',
+    'Master of Arts (MA)',
+    'Master of Science (MS)',
+    'Master of Business Administration (MBA)',
+    'Doctor Degree',
+    'Doctor of Philosophy (PhD)',
+    'Doctor of Medicine (MD)',
+    'Juris Doctor (JD)'
+];
 
 const checkboxPaddingTop = {
     paddingTop: "3.5rem"
-}
+};
 
 const checkboxFont = {
     fontSize: "1.6rem"
 };
 
-export default class ExperienceModalForm extends Component {
+export default class EducationModalForm extends Component {
     state = {
         _id: '',
-        title: '',
-        company: '',
+        degree: '',
+        fieldOfStudy: '',
+        school: '',
         location: '',
         fromMonth: '',
         fromYear: '',
@@ -32,15 +55,16 @@ export default class ExperienceModalForm extends Component {
         this.setState(prevState => ({
             ...prevState,
             _id: this.props._id ? this.props._id : '',
-            title: this.props.title ? this.props.title : '',
-            company: this.props.company ? this.props.company : '',
+            degree: this.props.degree ? this.props.degree : '',
+            fieldOfStudy: this.props.fieldOfStudy ? this.props.fieldOfStudy : '',
+            school: this.props.school ? this.props.school : '',
             location: this.props.location ? this.props.location : '',
             description: this.props.description ? this.props.description : '',
             fromMonth: this.props.from ? moment(this.props.from).format('MMM') : '',
             fromYear: this.props.from ? moment(this.props.from).format('YYYY') : '',
             toMonth: this.props.to ? moment(this.props.to).format('MMM') : '',
             toYear: this.props.to ? moment(this.props.to).format('YYYY') : '',
-            current: this.props.current ? this.props.current : false,
+            current: this.props.current ? this.props.current : false
         }))
     }
 
@@ -130,7 +154,7 @@ export default class ExperienceModalForm extends Component {
                 this.setState(() => {
                     return {
                         hasErrors: true,
-                        errorMessage: 'Please make sure employment dates are correct.'
+                        errorMessage: 'Please make sure education dates are correct.'
                     }
                 });
             }
@@ -141,7 +165,7 @@ export default class ExperienceModalForm extends Component {
                 this.setState(() => {
                     return {
                         hasErrors: true,
-                        errorMessage: 'Please make sure employment dates are correct.'
+                        errorMessage: 'Please make sure education dates are correct.'
                     }
                 });
             }
@@ -155,18 +179,19 @@ export default class ExperienceModalForm extends Component {
 
         setTimeout(() => {
             if (!this.state.hasErrors) {
-                const experienceData = {
+                const educationData = {
                     _id: this.state._id,
-                    title: this.state.title,
-                    company: this.state.company,
+                    degree: this.state.degree,
+                    fieldOfStudy: this.state.fieldOfStudy,
+                    school: this.state.school,
                     location: this.state.location,
                     from: moment(`${this.state.fromMonth}${this.state.fromYear}`, 'MMMYYYY').valueOf(),
                     to: this.state.current ? null : moment(`${this.state.toMonth}${this.state.toYear}`, 'MMMYYYY').valueOf(),
                     current: this.state.current,
                     description: this.state.description
                 }
-    
-                this.props.onExperienceUpdate(experienceData);
+
+                this.props.onEducationUpdate(educationData);
             }
         }, 200);
     }
@@ -174,9 +199,9 @@ export default class ExperienceModalForm extends Component {
     render() {
         let formHeading;
         if (this.props._id) {
-            formHeading = 'Provide Updates to This Work Experience';
+            formHeading = 'Provide Updates to Education Qualification';
         } else {
-            formHeading = 'Provide Details Of Your New Work Experience';
+            formHeading = 'Provide Details Of Your New Education Qualification';
         }
 
         return (
@@ -192,29 +217,41 @@ export default class ExperienceModalForm extends Component {
                     <div className="row u-margin--none">
                         <div className="col-1-of-2">
                             <div className="form__group">
-                                <label htmlFor="title" className="form__label form__label--required">Job Title</label>
-                                <ControlledTextInput
-                                    fieldName="title"
-                                    fieldId="title"
+                                <label htmlFor="degree" className="form__label form__label--required">Degree/ Qualification Type</label>
+                                <ControlledDropDownMenu
+                                    fieldName="degree"
+                                    fieldId="degree"
                                     className="form__input"
-                                    fieldValue={this.state.title}
+                                    options={degreeOptions}
+                                    fieldValue={this.state.degree}
                                     onChange={this.handleInputChange}
                                     required={true}
                                 />
                             </div>
                             <div className="form__group">
-                                <label htmlFor="company" className="form__label form__label--required">Company Name</label>
+                                <label htmlFor="fieldOfStudy" className="form__label form__label--required">Field of Study</label>
                                 <ControlledTextInput
-                                    fieldName="company"
-                                    fieldId="company"
+                                    fieldName="fieldOfStudy"
+                                    fieldId="fieldOfStudy"
                                     className="form__input"
-                                    fieldValue={this.state.company}
+                                    fieldValue={this.state.fieldOfStudy}
                                     onChange={this.handleInputChange}
                                     required={true}
                                 />
                             </div>
                             <div className="form__group">
-                                <label htmlFor="location" className="form__label">Company Location</label>
+                                <label htmlFor="school" className="form__label form__label--required">School</label>
+                                <ControlledTextInput
+                                    fieldName="school"
+                                    fieldId="school"
+                                    className="form__input"
+                                    fieldValue={this.state.school}
+                                    onChange={this.handleInputChange}
+                                    required={true}
+                                />
+                            </div>
+                            <div className="form__group">
+                                <label htmlFor="location" className="form__label">School Location</label>
                                 <ControlledTextInput
                                     fieldName="location"
                                     fieldId="location"
@@ -276,7 +313,7 @@ export default class ExperienceModalForm extends Component {
                         
                             <div className="form__group" style={checkboxPaddingTop}>
                                 <label htmlFor="current" className="checkbox-container">
-                                    <span style={checkboxFont}>This is my current job</span>
+                                    <span style={checkboxFont}>I am currently pursuing this qualification</span>
                                     <input 
                                         type="checkbox" 
                                         name="current" 
@@ -294,7 +331,7 @@ export default class ExperienceModalForm extends Component {
                     <div className="row">
                         <div className="col-full-width">
                             <div className="form__group">
-                                <label htmlFor="description" className="form__label">Job Description</label>
+                                <label htmlFor="description" className="form__label">Qualification Description</label>
                                 <ControlledTextArea
                                     rows="5"
                                     resize="vertical"

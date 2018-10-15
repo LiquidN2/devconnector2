@@ -1,27 +1,28 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import ProfileBox from './ProfileBox';
-
 import ProfileExperienceItem from './ProfileExperienceItem';
 
-const ExperienceContent = props => {
-    const { experiences } = props;
-    return (
-        <div className="profile-experience__container u-margin-top-3rem">
-            {
-                experiences.map(experience => {
-                    return (
-                        <ProfileExperienceItem 
-                            key={experience._id} 
-                            {...experience} 
-                            withTools={props.withTools}
-                            onShowItemToEdit={props.onShowItemToEdit}
-                        />
-                    )
-                })
-            }
-        </div>
-    );
+class ExperienceContent extends Component {
+    render() {
+        return (
+            <div className="profile-experience__container u-margin-top-3rem">
+                {
+                    this.props.experiences.map(experience => {
+                        return (
+                            <ProfileExperienceItem
+                                key={experience._id}
+                                {...experience}
+                                withTools={this.props.withTools}
+                                onShowItemToEdit={this.props.onShowItemToEdit}
+                                onExperienceDelete={this.props.onExperienceDelete}
+                            />
+                        )
+                    })
+                }
+            </div>
+        )
+    }
 }
 
 const ProfileExperience = ProfileBox(ExperienceContent);

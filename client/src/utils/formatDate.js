@@ -1,10 +1,19 @@
 import moment from 'moment';
 
 const formatDateRange = (fromDate, toDate) => {
+    let durationYears, durationMonths, duration, formattedToDate;
+
     const formattedFromDate = fromDate ? moment(fromDate).format('MMM YYYY') : null;
-    const formattedToDate = toDate ? moment(toDate).format('MMM YYYY') : null;
-    let durationYears, durationMonths, duration;
+    // const formattedToDate = toDate ? moment(toDate).format('MMM YYYY') : 'present';
+    
+    if (fromDate && !toDate) {
+        formattedToDate = 'present';
+        durationYears = moment().diff(moment(fromDate), 'years');
+        durationMonths = moment().diff(moment(fromDate), 'months') % 12;
+    }
+
     if (fromDate && toDate) {
+        formattedToDate = moment(toDate).format('MMM YYYY');
         durationYears = moment(toDate).diff(moment(fromDate), 'years');
         durationMonths = moment(toDate).diff(moment(fromDate), 'months') % 12;
     }

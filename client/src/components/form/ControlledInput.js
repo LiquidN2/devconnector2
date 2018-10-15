@@ -141,3 +141,31 @@ export const ControlledYearDropDown = props => {
         </select>
     );
 };
+
+export const ControlledDropDownMenu = props => {
+    return (
+        <select 
+            name={props.fieldName}
+            id={props.fieldId}
+            value={props.fieldValue}
+            className={props.className || "form__input"} 
+            onChange={props.onChange}
+            required={props.required}
+            disabled={props.isDisabled}
+        >
+            <option value="">- select -</option>
+            {
+                props.options.map((option, index) => {
+                    return (
+                        <option 
+                            key={index} 
+                            value={option}
+                        >
+                            {option}
+                        </option>
+                    );
+                })
+            }
+        </select>
+    );
+};

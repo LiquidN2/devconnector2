@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import ProfileBox from './ProfileBox';
-
 import ProfileEducationItem from './ProfileEducationItem';
 
-class EducationContent extends React.Component {
+class EducationContent extends Component {
     render() {
-        const { educations } = this.props;
         return (
             <div className="profile-education__container u-margin-top-3rem">
                 { 
-                    educations.map(education => {
-                        return <ProfileEducationItem key={education._id} {...education}/>
+                    this.props.educations.map(education => {
+                        return (
+                            <ProfileEducationItem 
+                                key={education._id} 
+                                {...education}
+                                withTools={this.props.withTools}
+                                onShowItemToEdit={this.props.onShowItemToEdit}
+                                onEducationDelete={this.props.onEducationDelete}
+                            />
+                        )
                     }) 
                 }
             </div>

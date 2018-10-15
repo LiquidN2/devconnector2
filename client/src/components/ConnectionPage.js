@@ -11,7 +11,7 @@ const ConnectionPage = props => {
                 <div className="container row u-padding-top-2rem">
                     <div className="col-1-of-4">
                         <div className="row">
-                            <ProfileBase />
+                            {/* <ProfileBase /> */}
                         </div>                
                     </div>
                     <div className="col-2-of-4">

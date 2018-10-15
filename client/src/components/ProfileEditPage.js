@@ -9,6 +9,7 @@ import ProfileMainForm from './form/ProfileMainForm';
 
 import setAuthToken from './../utils/setAuthToken';
 
+// load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync, updateCurrentUserProfileAsync } from './../actions/profileActions';
 
@@ -28,7 +29,6 @@ class ProfileEditPage extends Component {
     }
 
     onProfileMainUpdate = profileData => {
-        console.log(profileData);
         this.props.updateCurrentUserProfileAsync(profileData);
     }
 

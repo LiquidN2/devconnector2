@@ -69,9 +69,9 @@ const educationCreate = (req, res) => {
     if (req.body.fieldOfStudy) newEducation.fieldOfStudy = req.body.fieldOfStudy.trim();
     if (req.body.location) newEducation.location = req.body.location.trim();
     if (req.body.description) newEducation.description = req.body.description.trim();
-    if (req.body.from) newEducation.from = new Date(req.body.from.trim());
-    if (req.body.to) newEducation.to = new Date(req.body.to.trim());
-    if (req.body.current) newEducation.current = !!req.body.current;
+    if (req.body.from) newEducation.from = new Date(req.body.from);
+    if (req.body.to) newEducation.to = new Date(req.body.to);
+    if (req.body.current) newEducation.current = req.body.current;
 
     const conditions = { user: userId };
     const update = { 
@@ -140,9 +140,14 @@ const educationByIdUpdate = (req, res) => {
     if (req.body.fieldOfStudy) updatedEducation["education.$.fieldOfStudy"] = req.body.fieldOfStudy.trim();
     if (req.body.location) updatedEducation["education.$.location"] = req.body.location.trim();
     if (req.body.description) updatedEducation["education.$.description"] = req.body.description.trim();
-    if (req.body.from) updatedEducation["education.$.from"] = new Date(req.body.from.trim());
-    if (req.body.to) updatedEducation["education.$.to"] = new Date(req.body.to.trim());
-    if (req.body.current) updatedEducation["education.$.current"] = !!req.body.current;
+
+    updatedEducation["education.$.from"] = req.body.from ? new Date(req.body.from) : null;
+    updatedEducation["education.$.to"] = req.body.to ? new Date(req.body.to) : null;
+    updatedEducation["education.$.current"] = req.body.current;
+
+    // if (req.body.from) updatedEducation["education.$.from"] = new Date(req.body.from.trim());
+    // if (req.body.to) updatedEducation["education.$.to"] = new Date(req.body.to.trim());
+    // if (req.body.current) updatedEducation["education.$.current"] = !!req.body.current;
 
     const conditions = { 
         "user": userId,

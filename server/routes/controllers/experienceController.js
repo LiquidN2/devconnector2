@@ -68,9 +68,9 @@ const experienceCreate = (req, res) => {
     if (req.body.company) newExperience.company = req.body.company.trim();
     if (req.body.location) newExperience.location = req.body.location.trim();
     if (req.body.description) newExperience.description = req.body.description.trim();
-    if (req.body.from) newExperience.from = new Date(req.body.from);
-    if (req.body.to) newExperience.to = new Date(req.body.to);
-    if (req.body.current) newExperience.current = !!req.body.current;
+    if (req.body.from) newExperience.from = new Date(req.body.from); // unix time stamp milisec
+    if (req.body.to) newExperience.to = new Date(req.body.to); // unix time stamp milisec
+    if (req.body.current) newExperience.current = req.body.current;
 
     const conditions = { user: userId };
     const update = { 
@@ -138,9 +138,13 @@ const experienceByIdUpdate = (req, res) => {
     if (req.body.company) updatedExperience["experience.$.company"] = req.body.company.trim();
     if (req.body.location) updatedExperience["experience.$.location"] = req.body.location.trim();
     if (req.body.description) updatedExperience["experience.$.description"] = req.body.description.trim();
-    if (req.body.from) updatedExperience["experience.$.from"] = new Date(req.body.from.trim());
-    if (req.body.to) updatedExperience["experience.$.to"] = new Date(req.body.to.trim());
-    if (req.body.current) updatedExperience["experience.$.current"] = !!req.body.current;
+    updatedExperience["experience.$.from"] = req.body.from ? new Date(req.body.from) : null;
+    updatedExperience["experience.$.to"] = req.body.to ? new Date(req.body.to) : null;
+    updatedExperience["experience.$.current"] = req.body.current;
+
+    // if (req.body.from) updatedExperience["experience.$.from"] = new Date(req.body.from);
+    // if (req.body.to) updatedExperience["experience.$.to"] = new Date(req.body.to);
+    // if (req.body.current) updatedExperience["experience.$.current"] = !!req.body.current;
 
     const conditions = { 
         "user": userId,

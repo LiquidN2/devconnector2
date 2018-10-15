@@ -4,7 +4,13 @@ import {
     SET_CURRENT_USER_PROFILE,
     CURRENT_USER_PROFILE_UPDATE_REQUEST,
     CURRENT_USER_PROFILE_UPDATE_ERRORS,
-    CURRENT_USER_PROFILE_UPDATE_SUCCESS
+    CURRENT_USER_PROFILE_UPDATE_SUCCESS,
+    CURRENT_USER_EXPERIENCES_REQUEST,
+    CURRENT_USER_EXPERIENCES_SUCCESS,
+    CURRENT_USER_EXPERIENCES_ERRORS,
+    CURRENT_USER_EDUCATION_REQUEST,
+    CURRENT_USER_EDUCATION_ERRORS,
+    CURRENT_USER_EDUCATION_SUCCESS
 } from './../constants/actionTypes';
 
 const initialState = {
@@ -59,6 +65,50 @@ const profileReducer = (state = initialState, action) => {
                 isUpdating: false,
                 isUpdated: true
             };
+
+        case CURRENT_USER_EXPERIENCES_REQUEST:
+            return {
+                ...state,
+                isFetching: true
+            }
+
+        case CURRENT_USER_EXPERIENCES_ERRORS:
+            return {
+                ...state,
+                isFetching: false
+            }
+
+        case CURRENT_USER_EXPERIENCES_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                profile: {
+                    ...state.profile,
+                    experience: action.experiences
+                }
+            }
+        
+        case CURRENT_USER_EDUCATION_REQUEST:
+            return {
+                ...state,
+                isFetching: true
+            }
+
+        case CURRENT_USER_EDUCATION_ERRORS:
+            return {
+                ...state,
+                isFetching: false
+            }
+
+        case CURRENT_USER_EDUCATION_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                profile: {
+                    ...state.profile,
+                    education: action.education
+                }
+            }
         
         default:
             return state;

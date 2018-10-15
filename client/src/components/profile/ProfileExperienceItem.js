@@ -13,10 +13,15 @@ class ProfileExperienceItem extends Component {
             location: this.props.location,
             description: this.props.description,
             from: this.props.from,
-            to: this.props.to
-        }
+            to: this.props.to,
+            current: this.props.to ? false : true
+        };
 
         this.props.onShowItemToEdit(experienceData);
+    }
+
+    handleDeleteExperience = () => {
+        this.props.onExperienceDelete(this.props._id);
     }
 
     render() {
@@ -39,7 +44,7 @@ class ProfileExperienceItem extends Component {
                                 <button className="profile-subheading__icon btn-icon" onClick={this.handleEditExperience}>
                                     <i className="fas fa-pen"></i>
                                 </button>
-                                <button className="profile-subheading__icon btn-icon">
+                                <button className="profile-subheading__icon btn-icon" onClick={this.handleDeleteExperience}>
                                     <i className="fas fa-trash-alt"></i>
                                 </button>
                             </div>

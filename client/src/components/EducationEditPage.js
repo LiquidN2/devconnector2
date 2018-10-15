@@ -6,29 +6,29 @@ import { connect } from 'react-redux';
 import Header from './header/Header';
 import ProfileBase from './profile/ProfileBase';
 import Loading from './Loading';
-import ProfileExperience from './profile/ProfileExperience';
-import ExperienceModalForm from './form/ExperienceModalForm';
+import ProfileEducation from './profile/ProfileEducation';
+import EducationModalForm from './form/EducationModalForm';
 
 import setAuthToken from './../utils/setAuthToken';
 
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { 
-    getCurrentUserProfileAsync, 
-    getCurrentUserExperiencesAsync, 
-    addNewExperienceAsync, 
-    updateExperienceAsync, 
-    deleteExperienceAsync 
+    getCurrentUserProfileAsync,
+    getCurrentUserEducationAsync,
+    addNewEducationAsync,
+    updateEducationAsync,
+    deleteEducationAsync
 } from './../actions/profileActions';
 
 
 // bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#root');
 
-class ExperienceEditPage extends Component {
+class EducationEditPage extends Component {
     state = {
         modalIsOpen: false,
-        currentExperience: {}
+        currentEducation: {}
     };
     
     componentDidMount = () => {
@@ -39,33 +39,37 @@ class ExperienceEditPage extends Component {
             this.props.setCurrentUserAsync();
         }
 
+        // fetching profile user
         if (!this.props.profile._id) {
             this.props.getCurrentUserProfileAsync();
         }
     };
     
-    onExperienceUpdate = experienceData => {
-        if (!experienceData._id) {
-            // add new experience if exp id is not provided
-            this.props.addNewExperienceAsync(experienceData);
+    onEducationUpdate = educationData => {
+        if (!educationData._id) {
+            // add new
+            // console.log('adding new', educationData);
+            this.props.addNewEducationAsync(educationData);
         } else {
-            // console.log(experienceData);
-            this.props.updateExperienceAsync(experienceData);
+            // edit education
+            // console.log('editting', educationData);
+            this.props.updateEducationAsync(educationData);
         }
-        this.props.getCurrentUserExperiencesAsync();
+
+        this.props.getCurrentUserEducationAsync();        
         this.closeModal();
     };
 
-    onExperienceDelete = experienceId => {
-        this.props.deleteExperienceAsync(experienceId);
-        this.props.getCurrentUserExperiencesAsync();
+    onEducationDelete = educationId => {
+        this.props.deleteEducationAsync(educationId);
+        this.props.getCurrentUserEducationAsync();
     };
 
-    onShowItemToEdit = experienceData => {
+    onShowItemToEdit = educationData => {
         // set current exp to state
         this.setState(() => {
             return {
-                currentExperience: {...experienceData}
+                currentEducation: {...educationData}
             }
         });
 
@@ -75,7 +79,7 @@ class ExperienceEditPage extends Component {
     onAddNewItem = () => {
         this.setState(() => {
             return {
-                currentExperience: {}
+                currentEducation: {}
             }
         });
 
@@ -105,7 +109,7 @@ class ExperienceEditPage extends Component {
             status: this.props.profile.status
         };
 
-        const { experience } = this.props.profile;
+        const { education } = this.props.profile;
 
         return (
             <React.Fragment>
@@ -128,13 +132,13 @@ class ExperienceEditPage extends Component {
                         </div>
 
                         <div className="col-3-of-4">
-                            <ProfileExperience 
-                                boxTitle="Experience"
+                            <ProfileEducation 
+                                boxTitle="Education"
                                 withTools={true}
-                                experiences={experience || []}
+                                educations={education || []}
                                 onAddNewItem={this.onAddNewItem}
                                 onShowItemToEdit={this.onShowItemToEdit}
-                                onExperienceDelete={this.onExperienceDelete}
+                                onEducationDelete={this.onEducationDelete}
                             />
                         </div>
                     </div>
@@ -147,11 +151,11 @@ class ExperienceEditPage extends Component {
                     shouldCloseOnOverlayClick={true}
                     shouldCloseOnEsc={true}
                     className="modal"
-                    contentLabel="Experience Form Modal"
+                    contentLabel="Education Form Modal"
                     >
-                    <ExperienceModalForm
-                        {...this.state.currentExperience}
-                        onExperienceUpdate={this.onExperienceUpdate} 
+                    <EducationModalForm
+                        {...this.state.currentEducation}
+                        onEducationUpdate={this.onEducationUpdate} 
                         closeModal={this.closeModal}
                     />
                 </Modal>
@@ -171,11 +175,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = { 
     setCurrentUserAsync, 
-    getCurrentUserProfileAsync, 
-    getCurrentUserExperiencesAsync,
-    addNewExperienceAsync, 
-    updateExperienceAsync,
-    deleteExperienceAsync
+    getCurrentUserProfileAsync,
+    getCurrentUserEducationAsync,
+    addNewEducationAsync,
+    updateEducationAsync,
+    deleteEducationAsync
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExperienceEditPage);
+export default connect(mapStateToProps, mapDispatchToProps)(EducationEditPage);

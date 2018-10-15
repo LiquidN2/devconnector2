@@ -112,14 +112,17 @@ class ProfilePage extends Component {
                                         </div>
                                     </div>
                                 </React.Fragment>
-                            ) : (
+                            ) : null
+                        }
+
+                        {
+                            (!isFetchingProfile && !this.props.profile._id) ? (
                                 <div className="col-3-of-4">
                                     <p style={{marginBottom: "1.5rem"}}>You don't have a profile yet.</p>
                                     <Link to="/profile/create" className="link--color">Create Profile &rarr;</Link>    
                                 </div>
-                            )
+                            ) : null
                         }
-
                         
                     </div>
                 </section>

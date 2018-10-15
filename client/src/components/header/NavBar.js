@@ -6,6 +6,7 @@ const NavBar = props => {
     let links = [];
 
     switch(props.path) {
+        case '/profile/edit/education':
         case '/profile/edit/experience':
         case '/profile/edit':
             links = [{
