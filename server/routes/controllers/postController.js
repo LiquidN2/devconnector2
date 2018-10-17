@@ -4,6 +4,22 @@ const Post = require('./../../models/Post');
 // Load input validator
 const validatePostInput = require('./../../validation/post');
 
+const postGet = (req, res) => {
+    const errors = {};
+    const userId = req.user._id;
+    Post.find({ user: userId })
+        .sort({ date: -1 })
+        .then(posts => {
+            if (!posts) {
+                errors.post = 'No post found';
+                return res.status(404).json(errors);
+            }
+
+            return res.status(200).json(posts);
+        })
+        .catch(err => res.status(400).send());
+}
+
 const postCreate = (req, res) => {
     // validate post input
     const { errors, isValid } = validatePostInput(req.body);
@@ -110,6 +126,7 @@ const postByIdGet = (req, res) => {
 
 
 module.exports = {
+    postGet,
     postCreate,
     postByIdDelete,
     postByIdUpdate,

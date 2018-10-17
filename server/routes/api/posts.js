@@ -13,6 +13,15 @@ const router = express.Router();
 // @access  Public
 router.get('/test', (req, res) => res.json({msg: "Posts works"}));
 
+// @route   GET api/posts
+// @desc    Get 50 posts
+// @access  Private
+router.get(
+    '/', 
+    passport.authenticate('jwt', { session: false }), 
+    postController.postGet
+);
+
 // @route   POST api/posts
 // @desc    Create new post
 // @access  Private

@@ -8,6 +8,7 @@
   "scripts": {
     "client:install": "npm install --prefix client",
     "start": "node server.js",
+    "start:container": "node server/server.js",
     "server": "nodemon index.js",
     "client": "npm start --prefix client",
     "bat": "start-local-mongodb",
