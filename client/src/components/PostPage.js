@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 // load components
 import Header from './header/Header';
 import AvatarBox from './profile/AvatarBox';
-import ProfileSkills from './profile/ProfileSkills';
 import PostEntry from './post/PostEntry';
 import PostItem from './post/PostItem';
+import Loading from './Loading';
 
 import setAuthToken from './../utils/setAuthToken';
 
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
-import { getCurrentUserProfileAsync } from './../actions/profileActions';
+import { getCurrentUserPostsAsync, createPostAsync, deletePostAsync } from './../actions/postActions';
 
 class PostPage extends Component {
   componentDidMount = () => {
@@ -22,22 +22,32 @@ class PostPage extends Component {
       this.props.setCurrentUserAsync();
     }
 
-    // get current profile
-    // if (!this.props.profile._id) {
-    //   this.props.getCurrentUserProfileAsync();
-    // }
+    // get current user posts
+    this.props.getCurrentUserPostsAsync();
   }
 
-  handleCreatePost = post => {
-    console.log(post);
+  handleCreatePost = postText => {
+    const newPost = {
+      name: this.props.user.name,
+      avatar: this.props.user.avatar,
+      text: postText
+    }
+    this.props.createPostAsync(newPost);
+    // console.log(newPost);
+  }
+
+  handleDeletePost = postId => {
+    // console.log(postId);
+    this.props.deletePostAsync(postId);
   }
 
   render() {
-
+    
     return (
       <React.Fragment>
         <Header />
         <section className="section-profile">
+
           <div className="container row">
             <div className="col-1-of-4">
               <div className="row">
@@ -46,17 +56,33 @@ class PostPage extends Component {
             </div>
 
             <div className="col-2-of-4">
+
               <div className="row">
-                <PostEntry handleCreatePost={this.handleCreatePost}/>
+                <PostEntry handleCreatePost={this.handleCreatePost} />
               </div>
-              <div className="row">
-                <PostItem />
-              </div>
+              {
+                this.props.isFetchingPosts ? (
+                  <div className="container u-margin-bottom-3rem">
+                    <Loading />
+                  </div>
+                ) : null
+              }
+
+              {
+                this.props.posts.map(post => {
+                  return (
+                    <div key={post._id} className="row">
+                      <PostItem {...post} handleDeletePost={this.handleDeletePost}/>
+                    </div>
+                  )
+                })
+              }
+
             </div>
 
             <div className="col-1-of-4">
               <div className="row">
-                
+
               </div>
             </div>
 
@@ -68,12 +94,16 @@ class PostPage extends Component {
 };
 
 const mapStateToProps = state => ({
-  user: state.user.user
+  user: state.user.user,
+  isFetchingPosts: state.posts.isFetching,
+  posts: state.posts.posts
 });
 
 const mapDispatchToProps = {
   setCurrentUserAsync,
-  getCurrentUserProfileAsync
+  getCurrentUserPostsAsync,
+  createPostAsync,
+  deletePostAsync
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPage);
