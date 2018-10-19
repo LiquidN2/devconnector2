@@ -7,8 +7,15 @@ const validatePostInput = require('./../../validation/post');
 const postGet = (req, res) => {
     const errors = {};
     const userId = req.user._id;
+    
+    // pagination
+    const pageNumber = req.query.pageNumber ? req.query.pageNumber : 0;
+    const nPerPage = 3;
+
     Post.find({ user: userId })
         .sort({ date: -1 })
+        .skip( pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0 )
+        .limit(nPerPage)
         .then(posts => {
             if (!posts) {
                 errors.post = 'No post found';

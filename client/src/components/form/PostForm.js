@@ -20,6 +20,9 @@ export default class PostForm extends Component {
     event.preventDefault();
     const { post } = this.state;
     this.props.handleCreatePost(post);
+    this.setState(() => ({
+      post: ''
+    }));
   };
 
   render() {
@@ -34,6 +37,9 @@ export default class PostForm extends Component {
           placeholder="What's on your mind?"
           autoFocus
         />
+
+        { this.props.postErrors ? <span className="form__input-error" style={{marginBottom: "1rem"}}>{this.props.postErrors.text}</span> : null}
+        
         <button className="btn btn--small btn--color-primary">Post</button>
       </form>
     );

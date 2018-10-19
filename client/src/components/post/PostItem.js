@@ -4,6 +4,8 @@ import moment from 'moment';
 import Comments from './Comments';
 import PostItemMenu from './PostItemMenu';
 
+
+
 export default class PostItem extends Component {
   state = {
     showComments: false,
@@ -17,6 +19,12 @@ export default class PostItem extends Component {
     }));
   };
 
+  handleLikeToggle = event => {
+    event.preventDefault();
+    const postId = this.props._id
+    this.props.handleLikeToggle(postId);
+  }
+
   handleTogglePostItemMenu = event => {
     event.preventDefault();
     this.setState(prevState => ({
@@ -25,6 +33,20 @@ export default class PostItem extends Component {
   }
 
   render() {
+    let isLikedBySelf;
+    let classNameLikeButton = 'post-interactions__item';
+
+    if (this.props.likes.length > 0) {
+      isLikedBySelf = this.props.likes.findIndex(like => {
+        return like.user === this.props.user;
+      });
+    }
+
+    if (isLikedBySelf > -1) {
+      classNameLikeButton = classNameLikeButton + ' post-interactions__item--active'
+    }
+    
+
     return (
       <div className="post-box">
         <div className="post-header">
@@ -51,7 +73,7 @@ export default class PostItem extends Component {
         </div>
 
         <div className="post-interactions">
-          <button className="post-interactions__item post-interactions__item--active">
+          <button className={classNameLikeButton} onClick={this.handleLikeToggle}>
             <span className="post-interactions__icon">
               <i className="far fa-thumbs-up"></i>
             </span>
@@ -73,10 +95,7 @@ export default class PostItem extends Component {
             </span>
           </button>
         </div>
-
         { this.state.showComments ? <Comments comments={this.props.comments}/> : null }
-
-
       </div>
     )
   }

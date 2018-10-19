@@ -77,6 +77,7 @@ class ProfileEditPage extends Component {
                                     {...profileBase}
                                     onProfileMainUpdate={this.onProfileMainUpdate}
                                     isUpdatingProfile={isUpdatingProfile}
+                                    profileErrors={this.props.profileErrors}
                                 />
                             ) : (
                                 <ProfileMainForm onProfileMainUpdate={this.onProfileMainUpdate} />
@@ -93,9 +94,12 @@ class ProfileEditPage extends Component {
 const mapStateToProps = state => {
     return {
         isFetchingUser: state.user.isFetching,
+        userErrors: state.errors.user,
         user: state.user.user,
+
         isFetchingProfile: state.profile.isFetching,
         isUpdatingProfile: state.profile.isUpdating,
+        profileErrors: state.errors.profile,
         profile: state.profile.profile
     }
 }

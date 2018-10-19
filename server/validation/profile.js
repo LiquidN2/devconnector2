@@ -6,11 +6,19 @@ const validateProfileInput = data => {
     
     // handle validation
     if (isEmpty(data.handle)) {
-        errors.handle = 'Handle must be provided';
+        errors.handle = 'Handle must be provided.';
     } else {
         data.handle = data.handle.trim();
         if (!validator.isLength(data.handle, { min: 1, max: 40 })) {
-            errors.handle = 'Handle must be between 1 and 40 characters';
+            errors.handle = 'Handle must be between 1 and 40 characters.';
+        }
+        if (!validator.isAlphanumeric(data.handle, ['en-AU'])) {
+            const errorMsg = 'Handle must contains only letters and numbers.';
+            if (errors.handle) {
+                errors.handle = errors.handle + ' ' + errorMsg;
+            } else {
+                errors.handle = errorMsg;
+            }
         }
     }
     

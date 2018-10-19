@@ -185,6 +185,21 @@ export default class ProfileMainForm extends Component {
                 />
               </div>
               <div className="form__group">
+                <label htmlFor="handle" className="form__label form__label--required">Handle</label>
+                <ControlledTextInput
+                  fieldName="handle"
+                  fieldId="handle"
+                  className="form__input"
+                  fieldValue={this.state.handle}
+                  onChange={this.handleInputChange}
+                  required={true}
+                />
+                { this.props.profileErrors ? <span className="form__input-error">{this.props.profileErrors.handle}</span> : null }
+              </div>
+              
+            </div>
+            <div className="col-1-of-2">
+              <div className="form__group">
                 <label htmlFor="location" className="form__label">Location</label>
                 <ControlledTextInput
                   fieldName="location"
@@ -194,9 +209,6 @@ export default class ProfileMainForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
-            </div>
-            <div className="col-1-of-2">
-
               <div className="form__group">
                 <label htmlFor="company" className="form__label">Company</label>
                 <ControlledTextInput
@@ -213,17 +225,6 @@ export default class ProfileMainForm extends Component {
           <div className="row">
             <div className="col-1-of-2">
               <div className="form__group">
-                <label htmlFor="handle" className="form__label form__label--required">Handle</label>
-                <ControlledTextInput
-                  fieldName="handle"
-                  fieldId="handle"
-                  className="form__input"
-                  fieldValue={this.state.handle}
-                  onChange={this.handleInputChange}
-                  required={true}
-                />
-              </div>
-              <div className="form__group">
                 <label htmlFor="linkedin" className="form__label">LinkedIn</label>
                 <ControlledTextInput
                   fieldName="linkedin"
@@ -233,6 +234,7 @@ export default class ProfileMainForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
+              
               <div className="form__group">
                 <label htmlFor="facebook" className="form__label">Facebook</label>
                 <ControlledTextInput
@@ -243,6 +245,7 @@ export default class ProfileMainForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
+
               <div className="form__group">
                 <label htmlFor="instagram" className="form__label">Instagram</label>
                 <ControlledTextInput
@@ -250,6 +253,17 @@ export default class ProfileMainForm extends Component {
                   fieldId="instagram"
                   className="form__input"
                   fieldValue={this.state.instagram}
+                  onChange={this.handleInputChange}
+                />
+              </div>
+
+              <div className="form__group">
+                <label htmlFor="youtube" className="form__label">Youtube</label>
+                <ControlledTextInput
+                  fieldName="youtube"
+                  fieldId="youtube"
+                  className="form__input"
+                  fieldValue={this.state.youtube}
                   onChange={this.handleInputChange}
                 />
               </div>
@@ -265,6 +279,7 @@ export default class ProfileMainForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
+            
               <div className="form__group">
                 <label htmlFor="githubUser" className="form__label">Github User</label>
                 <ControlledTextInput
@@ -275,6 +290,7 @@ export default class ProfileMainForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </div>
+            
               <div className="form__group">
                 <label htmlFor="twitter" className="form__label">Twitter</label>
                 <ControlledTextInput
@@ -282,17 +298,6 @@ export default class ProfileMainForm extends Component {
                   fieldId="twitter"
                   className="form__input"
                   fieldValue={this.state.twitter}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-
-              <div className="form__group">
-                <label htmlFor="youtube" className="form__label">Youtube</label>
-                <ControlledTextInput
-                  fieldName="youtube"
-                  fieldId="youtube"
-                  className="form__input"
-                  fieldValue={this.state.youtube}
                   onChange={this.handleInputChange}
                 />
               </div>

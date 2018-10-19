@@ -12,9 +12,18 @@ import setAuthToken from './../utils/setAuthToken';
 
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
-import { getCurrentUserPostsAsync, createPostAsync, deletePostAsync } from './../actions/postActions';
+import { 
+  getCurrentUserPostsAsync, 
+  createPostAsync, 
+  deletePostAsync, 
+  postLikeToggleAsync 
+} from './../actions/postActions';
 
 class PostPage extends Component {
+  state = {
+    pageNumber: 1
+  };
+
   componentDidMount = () => {
     setAuthToken(localStorage.getItem('token'));
     // get current user
@@ -24,7 +33,7 @@ class PostPage extends Component {
 
     // get current user posts
     this.props.getCurrentUserPostsAsync();
-  }
+  };
 
   handleCreatePost = postText => {
     const newPost = {
@@ -34,12 +43,27 @@ class PostPage extends Component {
     }
     this.props.createPostAsync(newPost);
     // console.log(newPost);
-  }
+  };
 
   handleDeletePost = postId => {
     // console.log(postId);
     this.props.deletePostAsync(postId);
+  };
+
+  handleLikeToggle = postId => {
+    // console.log(postId);
+    this.props.postLikeToggleAsync(postId);
   }
+  
+  handleShowMorePosts = () => {
+    this.setState(prevState => ({
+      pageNumber: prevState.pageNumber + 1
+    }), () => {
+      this.props.getCurrentUserPostsAsync(this.state.pageNumber);
+      console.log('fetch post for page', this.state.pageNumber);
+    })
+    // console.log('fetch more posts');
+  };
 
   render() {
     
@@ -58,8 +82,26 @@ class PostPage extends Component {
             <div className="col-2-of-4">
 
               <div className="row">
-                <PostEntry handleCreatePost={this.handleCreatePost} />
+                <PostEntry 
+                  handleCreatePost={this.handleCreatePost} 
+                  postErrors={this.props.postErrors}
+                />
               </div>
+              
+              {
+                this.props.posts.map(post => {
+                  return (
+                    <div key={post._id} className="row">
+                      <PostItem 
+                        {...post}
+                        handleLikeToggle={this.handleLikeToggle} 
+                        handleDeletePost={this.handleDeletePost}
+                      />
+                    </div>
+                  )
+                })
+              }
+
               {
                 this.props.isFetchingPosts ? (
                   <div className="container u-margin-bottom-3rem">
@@ -68,15 +110,12 @@ class PostPage extends Component {
                 ) : null
               }
 
-              {
-                this.props.posts.map(post => {
-                  return (
-                    <div key={post._id} className="row">
-                      <PostItem {...post} handleDeletePost={this.handleDeletePost}/>
-                    </div>
-                  )
-                })
-              }
+              <div className="row u-display-flex-row-center">
+                <button className="btn-link btn-link--color" onClick={this.handleShowMorePosts}>
+                  <i className="fas fa-arrow-down"></i>&nbsp;
+                  Show older posts
+                </button>
+              </div>
 
             </div>
 
@@ -96,6 +135,7 @@ class PostPage extends Component {
 const mapStateToProps = state => ({
   user: state.user.user,
   isFetchingPosts: state.posts.isFetching,
+  postErrors: state.errors.post,
   posts: state.posts.posts
 });
 
@@ -103,7 +143,8 @@ const mapDispatchToProps = {
   setCurrentUserAsync,
   getCurrentUserPostsAsync,
   createPostAsync,
-  deletePostAsync
+  deletePostAsync,
+  postLikeToggleAsync
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPage);

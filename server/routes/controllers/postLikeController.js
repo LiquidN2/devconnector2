@@ -50,13 +50,13 @@ const postLikeToggle = (req, res) => {
 
             return Post.findOneAndUpdate(conditions, update, options);
         })
-        .then(updatedLike => {
-            if (!updatedLike) {
+        .then(updatedPost => {
+            if (!updatedPost) {
                 return Promise.reject();
             }
           
             postIsLiked = !postIsLiked; // update current like status of the post
-            return res.status(200).json({ postIsLiked });
+            return res.status(200).json({ postIsLiked, updatedPost });
         })
         .catch(err => res.status(400).send());
 };

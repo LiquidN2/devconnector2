@@ -7,7 +7,10 @@ import {
   CURRENT_USER_POSTS_CREATE_SUCCESS,
   CURRENT_USER_POSTS_DELETE_REQUEST,
   CURRENT_USER_POSTS_DELETE_ERRORS,
-  CURRENT_USER_POSTS_DELETE_SUCCESS  
+  CURRENT_USER_POSTS_DELETE_SUCCESS,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS
 } from './../constants/actionTypes';
 
 const initialState = {
@@ -33,13 +36,24 @@ const postReducer = (state = initialState, action) => {
       }
     
     case CURRENT_USER_POSTS_SUCCESS:
-      return {
-        isFetching: false,
-        posts: action.posts
+      if (action.page > 1) {
+        return {
+          isFetching: false,
+          posts: [
+            ...state.posts,
+            ...action.posts
+          ]
+        }
+      } else {
+        return {
+          isFetching: false,
+          posts: action.posts
+        }
       }
     
     case CURRENT_USER_POSTS_DELETE_REQUEST:
     case CURRENT_USER_POSTS_CREATE_REQUEST:
+    case CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST:
       return {
         ...state,
         isUpdating: true,
@@ -48,6 +62,7 @@ const postReducer = (state = initialState, action) => {
 
     case CURRENT_USER_POSTS_DELETE_ERRORS:
     case CURRENT_USER_POSTS_CREATE_ERRORS:
+    case CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS:
       return {
         ...state,
         isUpdating: false,
@@ -66,7 +81,7 @@ const postReducer = (state = initialState, action) => {
       }
     
     case CURRENT_USER_POSTS_DELETE_SUCCESS:
-      const updatedPost = state.posts.filter(post => {
+      const updatedPosts = state.posts.filter(post => {
         return post._id !== action.deletedPostId
       });
 
@@ -74,7 +89,23 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isUpdating: false,
         isUpdated: true,
-        posts: updatedPost
+        posts: updatedPosts
+      }
+    
+    case CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS:
+      const updatedLikesInPosts = state.posts.map(post => {
+        if (post._id === action.updatedPost._id) {
+          return action.updatedPost;
+        } else {
+          return post;
+        }
+      });
+
+      return {
+        ...state,
+        isUpdating: false,
+        isUpdated: true,
+        posts: updatedLikesInPosts
       }
 
     default:

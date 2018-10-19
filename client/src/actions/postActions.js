@@ -9,7 +9,10 @@ import {
   CURRENT_USER_POSTS_CREATE_SUCCESS,
   CURRENT_USER_POSTS_DELETE_REQUEST,
   CURRENT_USER_POSTS_DELETE_ERRORS,
-  CURRENT_USER_POSTS_DELETE_SUCCESS 
+  CURRENT_USER_POSTS_DELETE_SUCCESS,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
+  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS
 } from './../constants/actionTypes';
 
 const currentUserPostsRequest = () => ({
@@ -21,17 +24,19 @@ const currentUserPostsErrors = errors => ({
   errors
 });
 
-const currentUserPostsSuccess = posts => ({
+const currentUserPostsSuccess = (posts, page) => ({
   type: CURRENT_USER_POSTS_SUCCESS,
+  page,
   posts
 });
 
-export const getCurrentUserPostsAsync = () => {
+
+export const getCurrentUserPostsAsync = pageNumber => {
   return dispatch => {
     dispatch(currentUserPostsRequest());
-    return axios.get('/api/posts')
+    return axios.get(`/api/posts?pageNumber=${pageNumber}`)
       .then(res => {
-        dispatch(currentUserPostsSuccess(res.data));
+        dispatch(currentUserPostsSuccess(res.data, pageNumber));
       })
       .catch(err => {
         dispatch(currentUserPostsErrors(err.response.data));
@@ -90,6 +95,33 @@ export const deletePostAsync = postId => {
       })
       .catch(err => {
         dispatch(currentUserPostDeleteErrors(err.response.data));
+      });
+  };
+};
+
+const currentUserPostLikeToggleRequest = () => ({
+  type: CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST
+});
+
+const currentUserPostLikeToggleErrors = errors => ({
+  type: CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
+  errors
+});
+
+const currentUserPostLikeToggleSuccess = updatedPost => ({
+  type: CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS,
+  updatedPost
+});
+
+export const postLikeToggleAsync = postId => {
+  return dispatch => {
+    dispatch(currentUserPostLikeToggleRequest());
+    return axios.post(`/api/posts/like/${postId}`)
+      .then(res => {
+        dispatch(currentUserPostLikeToggleSuccess(res.data.updatedPost));
+      })
+      .catch(err => {
+        dispatch(currentUserPostLikeToggleErrors(err.response.data));
       });
   };
 };

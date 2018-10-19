@@ -16,7 +16,7 @@ export default class PostEntry extends Component {
             <span className="post-form-tab__text">Upload a photo</span>
           </a>
         </div>
-        <PostForm handleCreatePost={this.props.handleCreatePost} />
+        <PostForm handleCreatePost={this.props.handleCreatePost} postErrors={this.props.postErrors}/>
       </div>
     );
   }

@@ -7,7 +7,12 @@ import {
     CLEAR_REGISTER_ERRORS,
     SET_CURRENT_USER_ERRORS,
     GET_CURRENT_USER_PROFILE_ERRORS,
-    CURRENT_USER_PROFILE_UPDATE_ERRORS
+    CURRENT_USER_PROFILE_UPDATE_ERRORS,
+    CURRENT_USER_EXPERIENCES_ERRORS,
+    CURRENT_USER_EDUCATION_ERRORS,
+    CURRENT_USER_POSTS_ERRORS,
+    CURRENT_USER_POSTS_CREATE_ERRORS,
+    CURRENT_USER_POSTS_DELETE_ERRORS
 } from './../constants/actionTypes';
 
 
@@ -16,7 +21,8 @@ const initialState = {
     login: {},
     register: {},
     user: {},
-    profile: {}
+    profile: {},
+    post: {}
 };
 
 const errorReducer = (state = initialState, action) => {
@@ -50,20 +56,30 @@ const errorReducer = (state = initialState, action) => {
                 ...state,
                 register: {}
             };
-
-        case GET_CURRENT_USER_PROFILE_ERRORS:
-        case CURRENT_USER_PROFILE_UPDATE_ERRORS:
-            return {
-                ...state,
-                profile: action.errors
-            };
-
+        
         case SET_CURRENT_USER_ERRORS:
             return {
                 ...state,
                 user: action.errors
             }
-            
+
+        case GET_CURRENT_USER_PROFILE_ERRORS:
+        case CURRENT_USER_PROFILE_UPDATE_ERRORS:
+        case CURRENT_USER_EXPERIENCES_ERRORS:
+        case CURRENT_USER_EDUCATION_ERRORS:
+            return {
+                ...state,
+                profile: action.errors
+            };
+        
+        case CURRENT_USER_POSTS_ERRORS:
+        case CURRENT_USER_POSTS_CREATE_ERRORS:
+        case CURRENT_USER_POSTS_DELETE_ERRORS:
+            return {
+                ...state,
+                post: action.errors
+            }    
+
         default:
             return state;
     }
