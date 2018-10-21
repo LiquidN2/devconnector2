@@ -9,9 +9,26 @@ import PostItemMenu from './PostItemMenu';
 export default class PostItem extends Component {
   state = {
     showComments: false,
-    showMenu: false
+    showMenu: false,
+    isLikedBySelf: false
   };
 
+  componentDidMount = () => {
+    if (this.props.likes) {
+      // find index of user id in likes array
+      const userIndexInLike = this.props.likes.findIndex(like => {
+        return like.user === this.props.user;
+      });
+      
+      // if userId exists (index > -1) in array, set isLikedBySelf to true
+      if (userIndexInLike > -1) {
+        this.setState(() => ({
+          isLikedBySelf: true
+        }))
+      }
+    }
+  }
+  
   handleToggleComments = event => {
     event.preventDefault();
     this.setState(prevState => ({
@@ -21,8 +38,13 @@ export default class PostItem extends Component {
 
   handleLikeToggle = event => {
     event.preventDefault();
-    const postId = this.props._id
-    this.props.handleLikeToggle(postId);
+    const postId = this.props._id;
+
+    // this.props.handleLikeToggle(postId);
+
+    this.setState(prevState => ({
+      isLikedBySelf: !prevState.isLikedBySelf
+    }), this.props.handleLikeToggle(postId))
   }
 
   handleTogglePostItemMenu = event => {
@@ -33,19 +55,22 @@ export default class PostItem extends Component {
   }
 
   render() {
-    let isLikedBySelf;
     let classNameLikeButton = 'post-interactions__item';
 
-    if (this.props.likes.length > 0) {
-      isLikedBySelf = this.props.likes.findIndex(like => {
-        return like.user === this.props.user;
-      });
-    }
+    // let isLikedBySelf;
+    // if (this.props.likes.length > 0) {
+    //   isLikedBySelf = this.props.likes.findIndex(like => {
+    //     return like.user === this.props.user;
+    //   });
+    // }
 
-    if (isLikedBySelf > -1) {
-      classNameLikeButton = classNameLikeButton + ' post-interactions__item--active'
+    // if (isLikedBySelf > -1) {
+    //   classNameLikeButton = classNameLikeButton + ' post-interactions__item--active';
+    // }
+   
+    if (this.state.isLikedBySelf) {
+      classNameLikeButton = classNameLikeButton + ' post-interactions__item--active';
     }
-    
 
     return (
       <div className="post-box">
