@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 
-export default class PostItemMenu extends Component {
+import onClickOutside from 'react-onclickoutside';
+
+class PostItemMenu extends Component {
+  handleClickOutside = event => {
+    // ..handling code goes here...
+    console.log('clicked outside');
+    this.props.handleClickOutside();
+  };
+
   handleDeletePost = () => {
     const { id } = this.props;    
     this.props.handleDeletePost(id);
@@ -15,4 +23,6 @@ export default class PostItemMenu extends Component {
       </div>
     )
   }
-}
+};
+
+export default onClickOutside(PostItemMenu);

@@ -12,6 +12,7 @@ const path = require('path');
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
+const connections = require('./routes/api/connections');
 
 // Load passport auth strategy
 const configurePassport = require('./../config/passport');
@@ -42,6 +43,7 @@ configurePassport(passport);
 app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
+app.use('/api/connections', connections);
 
 // server static assets if in production
 if (env === 'production') {

@@ -12,7 +12,8 @@ import {
     CURRENT_USER_EDUCATION_ERRORS,
     CURRENT_USER_POSTS_ERRORS,
     CURRENT_USER_POSTS_CREATE_ERRORS,
-    CURRENT_USER_POSTS_DELETE_ERRORS
+    CURRENT_USER_POSTS_DELETE_ERRORS,
+    CREATE_COMMENT_ERRORS
 } from './../constants/actionTypes';
 
 
@@ -22,7 +23,8 @@ const initialState = {
     register: {},
     user: {},
     profile: {},
-    post: {}
+    post: {},
+    comment: {}
 };
 
 const errorReducer = (state = initialState, action) => {
@@ -78,7 +80,13 @@ const errorReducer = (state = initialState, action) => {
             return {
                 ...state,
                 post: action.errors
-            }    
+            }
+
+        case CREATE_COMMENT_ERRORS:
+            return {
+                ...state,
+                comment: action.errors
+            }
 
         default:
             return state;

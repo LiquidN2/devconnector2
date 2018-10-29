@@ -4,8 +4,6 @@ import moment from 'moment';
 import Comments from './Comments';
 import PostItemMenu from './PostItemMenu';
 
-
-
 export default class PostItem extends Component {
   state = {
     showComments: false,
@@ -52,7 +50,16 @@ export default class PostItem extends Component {
     this.setState(prevState => ({
       showMenu: !prevState.showMenu
     }));
-  }
+  };
+
+  handleCloseItemMenu = event => {
+    event.preventDefault();
+    this.setState(prevState => {
+      if (prevState.showMenu === true) {
+        return { showMenu: false }
+      }
+    });
+  };
 
   render() {
     let classNameLikeButton = 'post-interactions__item';
@@ -88,7 +95,15 @@ export default class PostItem extends Component {
               <button className="btn-tool-menu__toggle" onClick={this.handleTogglePostItemMenu}>
                 <i className="fas fa-ellipsis-h"></i>
               </button>
-              { this.state.showMenu ? <PostItemMenu id={this.props._id} handleDeletePost={this.props.handleDeletePost} /> : null }
+              { 
+                this.state.showMenu ? (
+                  <PostItemMenu 
+                    id={this.props._id} 
+                    handleDeletePost={this.props.handleDeletePost}
+                    handleClickOutside={this.handleCloseItemMenu}
+                  />
+                ) : null 
+              }
             </div>
           </div>
         </div>
@@ -120,7 +135,15 @@ export default class PostItem extends Component {
             </span>
           </button>
         </div>
-        { this.state.showComments ? <Comments comments={this.props.comments}/> : null }
+        { 
+          this.state.showComments ? ( 
+            <Comments 
+              postId={this.props._id} 
+              comments={this.props.comments}
+              handleCreateComment={this.props.handleCreateComment}
+            />
+            ) : null 
+        }
       </div>
     )
   }

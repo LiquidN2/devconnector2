@@ -12,7 +12,10 @@ import {
   CURRENT_USER_POSTS_DELETE_SUCCESS,
   CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
   CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
-  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS
+  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS,
+  CREATE_COMMENT_REQUEST,
+  CREATE_COMMENT_ERRORS,
+  CREATE_COMMENT_SUCCESS
 } from './../constants/actionTypes';
 
 const currentUserPostsRequest = () => ({
@@ -122,6 +125,35 @@ export const postLikeToggleAsync = postId => {
       })
       .catch(err => {
         dispatch(currentUserPostLikeToggleErrors(err.response.data));
+      });
+  };
+};
+
+
+const createCommentRequest = () => ({
+  type: CREATE_COMMENT_REQUEST
+});
+
+const createCommentErrors = errors => ({
+  type: CREATE_COMMENT_ERRORS,
+  errors
+});
+
+const createCommentSuccess = (postId, newComment) => ({
+  type: CREATE_COMMENT_SUCCESS,
+  postId,
+  newComment
+});
+
+export const createCommentAsync = (postId, commentData) => {
+  return dispatch => {
+    dispatch(createCommentRequest());
+    return axios.post(`/api/posts/comment/${postId}`, commentData)
+      .then(res => {
+        dispatch(createCommentSuccess(postId, res.data));
+      })
+      .catch(err => {
+        dispatch(createCommentErrors(err.response.data));
       });
   };
 };

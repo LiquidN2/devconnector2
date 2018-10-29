@@ -14,12 +14,15 @@ export default class Comments extends Component {
         }
         <div className="post-comment__show-more">
           <button className="btn-link btn-link--color">
-            <i className="fas fa-arrow-down"></i>
+            <i className="fas fa-arrow-down"></i>&nbsp;
             Show more comments
-        </button>
+          </button>
         </div>
         
-        <CommentForm />
+        <CommentForm 
+          postId={this.props.postId} 
+          handleCreateComment={this.props.handleCreateComment} 
+        />
 
       </div>
     )

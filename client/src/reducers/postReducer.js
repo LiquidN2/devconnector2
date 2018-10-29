@@ -10,7 +10,10 @@ import {
   CURRENT_USER_POSTS_DELETE_SUCCESS,
   CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
   CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
-  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS
+  CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS,
+  CREATE_COMMENT_REQUEST,
+  CREATE_COMMENT_ERRORS,
+  CREATE_COMMENT_SUCCESS
 } from './../constants/actionTypes';
 
 const initialState = {
@@ -54,6 +57,7 @@ const postReducer = (state = initialState, action) => {
     case CURRENT_USER_POSTS_DELETE_REQUEST:
     case CURRENT_USER_POSTS_CREATE_REQUEST:
     case CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST:
+    case CREATE_COMMENT_REQUEST:
       return {
         ...state,
         isUpdating: true,
@@ -63,6 +67,7 @@ const postReducer = (state = initialState, action) => {
     case CURRENT_USER_POSTS_DELETE_ERRORS:
     case CURRENT_USER_POSTS_CREATE_ERRORS:
     case CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS:
+    case CREATE_COMMENT_ERRORS:
       return {
         ...state,
         isUpdating: false,
@@ -106,6 +111,29 @@ const postReducer = (state = initialState, action) => {
         isUpdating: false,
         isUpdated: true,
         posts: updatedLikesInPosts
+      }
+    
+    case CREATE_COMMENT_SUCCESS:
+      const updatedCommentsInPosts = state.posts.map(post => {
+        if (post._id === action.postId) {
+          // return action.updatedPost;
+          return {
+            ...post,
+            comments: [
+              ...post.comments, 
+              action.newComment
+            ]
+          }
+        } else {
+          return post;
+        }
+      });
+
+      return {
+        ...state,
+        isUpdating: false,
+        isUpdated: false,
+        posts: updatedCommentsInPosts
       }
 
     default:

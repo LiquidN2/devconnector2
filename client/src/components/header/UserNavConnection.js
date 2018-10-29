@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-export default class UserNavMessenger extends Component {
+export default class UserNavConnection extends Component {
   render() {
     return (
       <div className="user-nav__icon-box">
         <span className="user-nav__icon">
-          <i className="far fa-comments fa-lg"></i>
+          <i class="far fa-user fa-lg"></i>
         </span>
         <span className="user-nav__notification">7</span>
       </div>

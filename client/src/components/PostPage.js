@@ -16,7 +16,8 @@ import {
   getCurrentUserPostsAsync, 
   createPostAsync, 
   deletePostAsync, 
-  postLikeToggleAsync 
+  postLikeToggleAsync,
+  createCommentAsync 
 } from './../actions/postActions';
 
 class PostPage extends Component {
@@ -60,9 +61,18 @@ class PostPage extends Component {
       pageNumber: prevState.pageNumber + 1
     }), () => {
       this.props.getCurrentUserPostsAsync(this.state.pageNumber);
-      console.log('fetch post for page', this.state.pageNumber);
-    })
-    // console.log('fetch more posts');
+    });
+  };
+
+  handleCreateComment = (postId, commentText) => {
+    const { name, avatar } = this.props.user;
+    const commentData = {
+      name,
+      avatar,
+      text: commentText
+    };
+    // console.log(postId, commentData);
+    this.props.createCommentAsync(postId, commentData);
   };
 
   render() {
@@ -96,6 +106,7 @@ class PostPage extends Component {
                         {...post}
                         handleLikeToggle={this.handleLikeToggle} 
                         handleDeletePost={this.handleDeletePost}
+                        handleCreateComment={this.handleCreateComment}
                       />
                     </div>
                   )
@@ -144,7 +155,8 @@ const mapDispatchToProps = {
   getCurrentUserPostsAsync,
   createPostAsync,
   deletePostAsync,
-  postLikeToggleAsync
+  postLikeToggleAsync,
+  createCommentAsync
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPage);
