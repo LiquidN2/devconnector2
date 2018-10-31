@@ -14,15 +14,46 @@ const connectionSchema = new Schema({
       ref: 'User'
     },
 
-    connected: {
-      type: Boolean,
-      default: false
+    profile: {
+      type: Schema.Types.ObjectId,
+      ref: 'Profile'
+    }
+
+    // connected: {
+    //   type: Boolean,
+    //   default: false
+    // },
+
+    // selfInitiated: {
+    //   type: Boolean
+    // }
+  }],
+
+  pendingRequestFrom: [{
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
 
-    selfInitiated: {
-      type: Boolean
+    profile: {
+      type: Schema.Types.ObjectId,
+      ref: 'Profile'
+    }
+  }],
+
+  pendingRequestTo: [{
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+
+    profile: {
+      type: Schema.Types.ObjectId,
+      ref: 'Profile'
     }
   }]
+
+
 });
 
 const Connection = mongoose.model('Connection', connectionSchema);

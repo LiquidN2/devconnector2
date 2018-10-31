@@ -1,8 +1,9 @@
 import {
+    USER_LOGOUT,
     SET_CURRENT_USER_REQUEST,
     SET_CURRENT_USER_SUCCESS,
     SET_CURRENT_USER_ERRORS
-} from './../constants/actionTypes';
+} from './../constants/authActionTypes';
 
 const initialState = {
     isFetching: false,
@@ -24,11 +25,10 @@ const userReducer = (state = initialState, action) => {
                 user: {...action.user}
             };
         
+        case USER_LOGOUT:
         case SET_CURRENT_USER_ERRORS:
             return {
-                ...state,
-                isFetching: false,
-                user: {}
+                ...initialState
             };
 
         default:

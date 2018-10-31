@@ -12,6 +12,7 @@ import setAuthToken from './../utils/setAuthToken';
 
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
+import { getNumConnectionsAsync } from './../actions/connectionActions';
 import { 
   getCurrentUserPostsAsync, 
   createPostAsync, 
@@ -34,6 +35,9 @@ class PostPage extends Component {
 
     // get current user posts
     this.props.getCurrentUserPostsAsync();
+
+    // get number of connections
+    this.props.getNumConnectionsAsync();
   };
 
   handleCreatePost = postText => {
@@ -85,11 +89,14 @@ class PostPage extends Component {
           <div className="container row">
             <div className="col-1-of-4">
               <div className="row">
-                <AvatarBox user={this.props.user} />
+                <AvatarBox 
+                  user={this.props.user} 
+                  numConnections={this.props.connections.numConnections}
+                />
               </div>
             </div>
 
-            <div className="col-2-of-4">
+            <div className="col-3-of-4">
 
               <div className="row">
                 <PostEntry 
@@ -145,6 +152,7 @@ class PostPage extends Component {
 
 const mapStateToProps = state => ({
   user: state.user.user,
+  connections: state.connections,
   isFetchingPosts: state.posts.isFetching,
   postErrors: state.errors.post,
   posts: state.posts.posts
@@ -152,11 +160,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setCurrentUserAsync,
+  getNumConnectionsAsync,
   getCurrentUserPostsAsync,
   createPostAsync,
   deletePostAsync,
   postLikeToggleAsync,
   createCommentAsync
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPage);

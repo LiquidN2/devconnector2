@@ -11,12 +11,39 @@ const connectionController = require('./../controllers/connectionController');
 router.get('/test', (req, res) => res.json({ msg: "Connections works" }));
 
 // @route   GET api/connections
-// @desc    add new connection for current user
+// @desc    get connections for current user
 // @access  Private
 router.get(
   '/', 
   passport.authenticate('jwt', { session: false }),
   connectionController.connectionGet
+);
+
+// @route   GET api/connections/count
+// @desc    get number of connections
+// @access  Private
+router.get(
+  '/count', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.connectionCountGet
+);
+
+// @route   GET api/connections/pending
+// @desc    get number of pending connection request
+// @access  Private
+router.get(
+  '/pending', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.pendingRequestGet
+);
+
+// @route   GET api/connections/countpending
+// @desc    get number of pending connection request
+// @access  Private
+router.get(
+  '/countpending', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.pendingRequestCountGet
 );
 
 // @route   POST api/connections
@@ -44,6 +71,15 @@ router.patch(
   '/approve', 
   passport.authenticate('jwt', { session: false }),
   connectionController.connectionApprove
+);
+
+// @route   PATCH api/connections/decline
+// @desc    decline connection request
+// @access  Private
+router.patch(
+  '/decline', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.connectionDecline
 );
 
 module.exports = router;

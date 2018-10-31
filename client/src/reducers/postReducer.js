@@ -1,3 +1,7 @@
+import {
+  USER_LOGOUT
+} from './../constants/authActionTypes';
+
 import { 
   CURRENT_USER_POSTS_REQUEST,
   CURRENT_USER_POSTS_ERRORS,
@@ -14,7 +18,7 @@ import {
   CREATE_COMMENT_REQUEST,
   CREATE_COMMENT_ERRORS,
   CREATE_COMMENT_SUCCESS
-} from './../constants/actionTypes';
+} from './../constants/postActionTypes';
 
 const initialState = {
   isFetching: false,
@@ -135,6 +139,11 @@ const postReducer = (state = initialState, action) => {
         isUpdated: false,
         posts: updatedCommentsInPosts
       }
+
+    case USER_LOGOUT:
+      return {
+        ...initialState
+      };
 
     default:
       return state;

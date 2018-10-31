@@ -3,7 +3,7 @@ import {
     SET_CURRENT_USER_REQUEST, 
     SET_CURRENT_USER_SUCCESS, 
     SET_CURRENT_USER_ERRORS 
-} from './../constants/actionTypes';
+} from './../constants/authActionTypes';
 
 const setCurrentUserRequest = () => ({
     type: SET_CURRENT_USER_REQUEST

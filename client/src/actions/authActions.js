@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import history from './../routers/history';
 
 import setAuthToken from './../utils/setAuthToken';
 
@@ -9,7 +10,7 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGIN_ERROR,
   USER_LOGOUT
-} from './../constants/actionTypes';
+} from './../constants/authActionTypes';
 
 // ----- action auth state -----
 const userLoginRequest = () => ({
@@ -71,6 +72,8 @@ const userLogout = () => {
     setAuthToken(null);
     // reset application auth state
     dispatch(userLoggedOutState());
+
+    history.push('/login');
   }
 }
 

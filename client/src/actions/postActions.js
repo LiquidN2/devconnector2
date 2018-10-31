@@ -16,7 +16,7 @@ import {
   CREATE_COMMENT_REQUEST,
   CREATE_COMMENT_ERRORS,
   CREATE_COMMENT_SUCCESS
-} from './../constants/actionTypes';
+} from './../constants/postActionTypes';
 
 const currentUserPostsRequest = () => ({
   type: CURRENT_USER_POSTS_REQUEST

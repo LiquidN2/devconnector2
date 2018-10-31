@@ -7,7 +7,7 @@ import {
   USER_LOGIN_ERROR,
   USER_LOGOUT,
   GET_LOGIN_ERRORS
-} from './../constants/actionTypes';
+} from './../constants/authActionTypes';
 
 const token = localStorage.getItem('token');
 
@@ -29,7 +29,6 @@ const authReducer = (state = initialState, action) => {
 
     case USER_LOGIN_ERROR:
     case GET_LOGIN_ERRORS:
-    case USER_LOGOUT:
       return {
         ...state,
         isFetching: false,
@@ -43,6 +42,13 @@ const authReducer = (state = initialState, action) => {
         isFetching: false,
         isAuthenticated: true,
         tokenPayload: action.decodedToken
+      };
+
+    case USER_LOGOUT:
+      return {
+        isFetching: false,
+        isAuthenticated: false,
+        tokenPayload: {}
       };
 
     default:

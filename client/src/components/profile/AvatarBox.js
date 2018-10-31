@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default class AvatarBox extends Component {
   render() {
-    const { user, location } = this.props;
+    const { user, location, numConnections } = this.props;
     return (
       <div className="profile-base">
         <div className="profile-base__photo-container">
@@ -13,8 +13,8 @@ export default class AvatarBox extends Component {
         </div>
         <div className="profile-base__connections-views">
           <div className="profile-base__connections-views-box">
-            <p className="profile-base__connections-views-count">300</p>
-            <p className="profile-base__connections-views-text">connections</p>
+            <p className="profile-base__connections-views-count">{numConnections}</p>
+            <p className="profile-base__connections-views-text">{numConnections > 1 ? 'connections' : 'connection'}</p>
           </div>
           <div className="profile-base__connections-views-box">
             <p className="profile-base__connections-views-count">450</p>

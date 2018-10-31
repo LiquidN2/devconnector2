@@ -7,6 +7,7 @@ import errorReducer from './errorReducer';
 import userReducer from './userReducer';
 import profileReducer from './profileReducer';
 import postReducer from './postReducer';
+import connectionReducer from './connectionsReducer';
 
 const rootReducer = combineReducers({
     register: registerReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     errors: errorReducer,
     user: userReducer,
     profile: profileReducer,
-    posts: postReducer
+    posts: postReducer,
+    connections: connectionReducer
 });
 
 export default rootReducer;
