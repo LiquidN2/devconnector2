@@ -29,7 +29,7 @@ router.get(
 );
 
 // @route   GET api/connections/pending
-// @desc    get number of pending connection request
+// @desc    get pending connections
 // @access  Private
 router.get(
   '/pending', 
@@ -44,6 +44,15 @@ router.get(
   '/countpending', 
   passport.authenticate('jwt', { session: false }),
   connectionController.pendingRequestCountGet
+);
+
+// @route   GET api/connections/status/:userId
+// @desc    get connection status with user Id
+// @access  Private
+router.get(
+  '/status/:userId', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.connectionStatusGet
 );
 
 // @route   POST api/connections

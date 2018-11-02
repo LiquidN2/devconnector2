@@ -26,7 +26,7 @@ export default class Connections extends Component {
             </span>
           </div>
 
-          <hr className="connection-text-separater" />
+          <div className="connection-text-separater"></div>
 
           <div className="connection-item-container">
             {

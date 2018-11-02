@@ -1,52 +1,55 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import SocialItem from './SocialItem';
 
-const ProfileBase = props => {
-    const { user, handle, website, location, social, githubUser } = props;
+export default class ProfileBase extends Component {
+  render() {
+    const { user, handle, website, location, social, githubUser, numConnections } = this.props;
     let email, linkedin, facebook, twitter, instagram, youtube;
     if (user) email = user.email;
     if (social) {
-        linkedin = social.linkedin;
-        facebook = social.facebook;
-        twitter = social.twitter;
-        instagram = social.instagram;
-        youtube = social.youtube;
+      linkedin = social.linkedin;
+      facebook = social.facebook;
+      twitter = social.twitter;
+      instagram = social.instagram;
+      youtube = social.youtube;
     }
-    // const { email } = user;
-    // const { linkedin, facebook, twitter, instagram, youtube } = social;
 
     return (
-        <div className="profile-base">
-            <div className="profile-base__photo-container">
-                <img src={user.avatar} alt="user 1" className="profile-base__photo" />
-                <p className="profile-base__text-name">{user.name}</p>
-                <p className="profile-base__text-location">{location}</p>
-            </div>
-            <div className="profile-base__connections-views">
-                <div className="profile-base__connections-views-box">
-                    <p className="profile-base__connections-views-count">300</p>
-                    <p className="profile-base__connections-views-text">connections</p>
-                </div>
-                <div className="profile-base__connections-views-box">
-                    <p className="profile-base__connections-views-count">450</p>
-                    <p className="profile-base__connections-views-text">views</p>
-                </div>
-            </div>
-            <div className="profile-base__socials">
-                {handle ? <SocialItem urlType="handle" urlValue={handle} /> : null}
-                {githubUser ? <SocialItem urlType="github" urlValue={githubUser} /> : null}
-                {email ? <SocialItem urlType="email" urlValue={email} /> : null}
-                {website ? <SocialItem urlType="website" urlValue={website} /> : null}
-                {linkedin ? <SocialItem urlType="linkedin" urlValue={linkedin} /> : null}
-                {twitter ? <SocialItem urlType="twitter" urlValue={twitter} /> : null}
-                {facebook ? <SocialItem urlType="facebook" urlValue={facebook} /> : null}
-                {instagram ? <SocialItem urlType="instagram" urlValue={instagram} /> : null}
-                {youtube ? <SocialItem urlType="youtube" urlValue={youtube} /> : null}
-            </div>
+      <div className="profile-base">
+        <div className="profile-base__photo-container">
+          <img src={user.avatar} alt={user.name} className="profile-base__photo" />
+          <p className="profile-base__text-name">{user.name}</p>
+          <p className="profile-base__text-location">{location}</p>
         </div>
-    );
 
+        {
+          numConnections > 0 ? (
+            <div className="profile-base__connections-views">
+              <div className="profile-base__connections-views-box">
+                <p className="profile-base__connections-views-count">{numConnections}</p>
+                <p className="profile-base__connections-views-text">{numConnections > 1 ? 'connections' : 'connection'}</p>
+              </div>
+              <div className="profile-base__connections-views-box">
+                <p className="profile-base__connections-views-count">450</p>
+                <p className="profile-base__connections-views-text">views</p>
+              </div>
+            </div>
+          ) : null
+        }
+
+        <div className="profile-base__socials">
+          {handle ? <SocialItem urlType="handle" urlValue={handle} /> : null}
+          {githubUser ? <SocialItem urlType="github" urlValue={githubUser} /> : null}
+          {email ? <SocialItem urlType="email" urlValue={email} /> : null}
+          {website ? <SocialItem urlType="website" urlValue={website} /> : null}
+          {linkedin ? <SocialItem urlType="linkedin" urlValue={linkedin} /> : null}
+          {twitter ? <SocialItem urlType="twitter" urlValue={twitter} /> : null}
+          {facebook ? <SocialItem urlType="facebook" urlValue={facebook} /> : null}
+          {instagram ? <SocialItem urlType="instagram" urlValue={instagram} /> : null}
+          {youtube ? <SocialItem urlType="youtube" urlValue={youtube} /> : null}
+        </div>
+      </div>
+    )
+  }
 }
-
-export default ProfileBase;

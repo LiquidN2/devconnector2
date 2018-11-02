@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 // Load model
 const Connection = require('./../../models/Connection');
 
@@ -20,108 +21,84 @@ const connectionAdd = (req, res) => {
    * 1. user B will be added to pendingRequestTo of user A's doc
    * 2. user A will be added to pendingRequestFrom of user B's doc
    */
-  const requesterPromise = new Promise((resolve, reject) => {
-    Connection.findOne({ user: userId })
-      .then(connectionDoc => {
-        if (connectionDoc) {
-          
-          // if connection doc exists, check if req.body.userId is in connection or in pendingRequests 
-          const queryConnection = Connection.findOne({ user: userId, "connections.user": connectToUserId });
-          const queryPendingRequestFrom = Connection.findOne({ user: userId, "pendingRequestFrom.user": connectToUserId });
-          const queryPendingRequestTo = Connection.findOne({ user: userId, "pendingRequestTo.user": connectToUserId });
-
-          return Promise.all([queryConnection, queryPendingRequestFrom, queryPendingRequestTo])
-            .then(([isConnected, pendingRequestFrom, pendingRequestTo]) => {
-              if (isConnected || pendingRequestFrom || pendingRequestTo) {
-                resolve({ msg: 'connected or pending connection request' })
-              } else {
-                const conditions = { user: userId };
-                const update = {
-                  $push: {
-                    pendingRequestTo: {
-                      user: connectToUserId,
-                      profile: connectToProfileId
-                    }
-                  }
-                };
-                const options = { new: true };
-
-                return Connection.findOneAndUpdate(conditions, update, options);
-              }
-            })
-            .catch(err => reject(err));
-
-        } else {
-          // if connection doc does not exist, create new connection doc
-          const connectionFields = {
-            user: userId,
-            pendingRequestTo: [{
-              user: connectToUserId,
-              profile: connectToProfileId
-            }]
-          };
-
-          const newConnection = new Connection(connectionFields);
-          return newConnection.save();
-        }
-      })
-      .then(updatedConnection => {
-        resolve(updatedConnection);
-      })
-      .catch(err => reject(err));
-  });
-
-  const receiverPromise = new Promise((resolve, reject) => {
-    Connection.findOne({ user: connectToUserId })
-      .then(connection => {
-        if (connection) {
-
-          const queryConnection = Connection.findOne({ user: connectToUserId, "connections.user": userId });
-          const queryPendingRequestFrom = Connection.findOne({ user: connectToUserId, "pendingRequestFrom.user": userId });
-          const queryPendingRequestTo = Connection.findOne({ user: connectToUserId, "pendingRequestTo.user": userId });
-
-          return Promise.all([queryConnection, queryPendingRequestFrom, queryPendingRequestTo])
-            .then(([isConnected, pendingRequestFrom, pendingRequestTo]) => {
-              if (isConnected || pendingRequestFrom || pendingRequestTo) {
-                resolve({ msg: 'connected or pending connection request' })
-              } else {
-                const conditions = { user: connectToUserId };
-                const update = {
-                  $push: {
-                    pendingRequestFrom: {
-                      user: userId,
-                      profile: selfProfileId
-                    }
-                  }
-                };
-                const options = { new: true };
-
-                return Connection.findOneAndUpdate(conditions, update, options);
-              }
-            })
-            .catch(err => reject(err));
-        } else {
-          // create connection
-          const connectionFields = {
+  const requesterPromise = Connection.findOne({ user: userId })
+    .then(doc => {
+      if (!doc) {
+        const connectionFields = {
+          user: userId,
+          pendingRequestTo: [{
             user: connectToUserId,
-            pendingRequestFrom: [{
-              user: userId,
-              profile: selfProfileId
-            }]
-          };
+            profile: connectToProfileId
+          }]
+        };
 
-          const newConnection = new Connection(connectionFields);
-          return newConnection.save();
-        }
-      })
-      .then(updatedConnection => {
-        resolve(updatedConnection);
-      })
-      .catch(err => reject(err));
-  });
+        const newConnection = new Connection(connectionFields);
+        return newConnection.save();
+      } else {
+        return Connection.findOneAndUpdate({
+          $and: [
+            { user: userId },
+            { "connections.user": { $ne: connectToUserId } },
+            { "pendingRequestTo.user": { $ne: connectToUserId } },
+            { "pendingRequestFrom.user": { $ne: connectToUserId } }
+          ]
+        }, {
+            $addToSet: {
+              pendingRequestTo: {
+                user: connectToUserId,
+                profile: connectToProfileId
+              }
+            }
+          }, {
+            new: true
+          });
+      }
+    })
+    .catch(err => Promise.reject(err));
+
+  const receiverPromise = Connection.findOne({ user: connectToUserId })
+    .then(doc => {
+      if (!doc) {
+        const connectionFields = {
+          user: connectToUserId,
+          pendingRequestFrom: [{
+            user: userId,
+            profile: selfProfileId
+          }]
+        };
+
+        const newConnection = new Connection(connectionFields);
+        return newConnection.save();
+      } else {
+        return Connection.findOneAndUpdate({
+          $and: [
+            { user: connectToUserId },
+            { "connections.user": { $ne: userId } },
+            { "pendingRequestTo.user": { $ne: userId } },
+            { "pendingRequestFrom.user": { $ne: userId } }
+          ]
+        }, {
+            $addToSet: {
+              pendingRequestFrom: {
+                user: userId,
+                profile: selfProfileId
+              }
+            }
+          }, {
+            new: true
+          });
+      }
+    })
+  .catch(err => Promise.reject(err));
 
   Promise.all([requesterPromise, receiverPromise])
-    .then(values => res.json(values))
+    .then(([requesterSuccess, receiverSuccess]) => {
+      if (!requesterSuccess || !receiverSuccess) {
+        res.json({ connectionSent: false });
+      } else {
+        res.json({ connectionSent: true });
+      }
+    })
     .catch(err => res.status(400).json(err));
 
 };
@@ -142,30 +119,30 @@ const conenctionRemove = (req, res) => {
     user: userId,
     "connections.user": connectToUserId
   }, {
-    $pull: {
-      connections: {
-        user: connectToUserId
+      $pull: {
+        connections: {
+          user: connectToUserId
+        }
       }
-    }
-  }, {
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   // Promise 2 - Update connections of the one being removed
   const removedConnectionUpdate = Connection.findOneAndUpdate({
     user: connectToUserId,
     "connections.user": userId
   }, {
-    $pull: {
-      connections: {
-        user: userId
+      $pull: {
+        connections: {
+          user: userId
+        }
       }
-    }
-  }, {
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   Promise.all([removerConnectionUpdate, removedConnectionUpdate])
     .then(results => {
@@ -202,77 +179,77 @@ const connectionApprove = (req, res) => {
 
   // Promise 1 - In Approver doc - remove pendingRequestFrom 
   const removePendingRequestFrom = Connection.findOneAndUpdate({
-    user: userId, 
+    user: userId,
     "pendingRequestFrom.user": connectToUserId
-  },{
-    $pull: {
-      pendingRequestFrom: {
-        user: connectToUserId
+  }, {
+      $pull: {
+        pendingRequestFrom: {
+          user: connectToUserId
+        }
       }
-    }  
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   // Promise 2 - In Approver doc - add to connections
   const addToApproverConnection = Connection.findOneAndUpdate({
-    user: userId, 
+    user: userId,
     "connections.user": { $ne: connectToUserId }
-  },{
-    $addToSet: {
-      connections: {
-        user: connectToUserId,
-        profile: connectToProfileId
+  }, {
+      $addToSet: {
+        connections: {
+          user: connectToUserId,
+          profile: connectToProfileId
+        }
       }
-    }
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   // Promise 3 - In Requester doc - remove pendingRequestTo 
   const removePendingRequestTo = Connection.findOneAndUpdate({
-    user: connectToUserId, 
+    user: connectToUserId,
     "pendingRequestTo.user": userId
-  },{
-    $pull: {
-      pendingRequestTo: {
-        user: userId
+  }, {
+      $pull: {
+        pendingRequestTo: {
+          user: userId
+        }
       }
-    }  
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   // Promise 4 - In Requester doc - add to connections
   const addToRequesterConnection = Connection.findOneAndUpdate({
-    user: connectToUserId, 
+    user: connectToUserId,
     "connections.user": { $ne: userId }
-  },{
-    $addToSet: {
-      connections: {
-        user: userId,
-        profile: selfProfileId
+  }, {
+      $addToSet: {
+        connections: {
+          user: userId,
+          profile: selfProfileId
+        }
       }
-    }
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   Promise.all([
-    removePendingRequestFrom, 
-    addToApproverConnection, 
-    removePendingRequestTo, 
+    removePendingRequestFrom,
+    addToApproverConnection,
+    removePendingRequestTo,
     addToRequesterConnection
   ]).then(results => {
     if (!results[0] || !results[1] || !results[2] || !results[3]) {
       errors.approveConnection = 'Unable to approve connection';
-      res.status(400).json({ 
-        connectionApproved: false, 
-        errors 
+      res.status(400).json({
+        connectionApproved: false,
+        errors
       });
     } else {
       res.json({ connectionApproved: true });
@@ -300,43 +277,43 @@ const connectionDecline = (req, res) => {
 
   // Promise 1 - In Decliner doc - remove pendingRequestFrom 
   const removePendingRequestFrom = Connection.findOneAndUpdate({
-    user: userId, 
+    user: userId,
     "pendingRequestFrom.user": connectToUserId
-  },{
-    $pull: {
-      pendingRequestFrom: {
-        user: connectToUserId
+  }, {
+      $pull: {
+        pendingRequestFrom: {
+          user: connectToUserId
+        }
       }
-    }  
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   // Promise 2 - In Requester doc - remove pendingRequestTo 
   const removePendingRequestTo = Connection.findOneAndUpdate({
-    user: connectToUserId, 
+    user: connectToUserId,
     "pendingRequestTo.user": userId
-  },{
-    $pull: {
-      pendingRequestTo: {
-        user: userId
+  }, {
+      $pull: {
+        pendingRequestTo: {
+          user: userId
+        }
       }
-    }  
-  },{
-    upsert: false,
-    new: true
-  });
+    }, {
+      upsert: false,
+      new: true
+    });
 
   Promise.all([
-    removePendingRequestFrom, 
+    removePendingRequestFrom,
     removePendingRequestTo
   ]).then(results => {
     if (!results[0] || !results[1]) {
       errors.declineConnection = 'Unable to decline connection';
-      res.status(400).json({ 
-        connectionDeclined: false, 
-        errors 
+      res.status(400).json({
+        connectionDeclined: false,
+        errors
       });
     } else {
       res.json({ connectionDeclined: true });
@@ -417,12 +394,12 @@ const pendingRequestGet = (req, res) => {
     .populate('pendingRequestFrom.profile', ['status', 'company', 'location'])
     .then(doc => {
       if (!doc || doc.pendingRequestFrom.length === 0) {
-        res.json({ 
+        res.json({
           numPendingRequests: 0,
-          pendingRequests: [] 
+          pendingRequests: []
         });
       } else {
-        res.json({ 
+        res.json({
           numPendingRequests: doc.pendingRequestFrom.length,
           pendingRequests: doc.pendingRequestFrom
         });
@@ -431,6 +408,76 @@ const pendingRequestGet = (req, res) => {
     .catch(err => res.status(400).send(err));
 }
 
+
+const connectionStatusGet = (req, res) => {
+  const errors = {};
+  const userId = req.user._id;
+  const visitingUserId = req.params.userId;
+
+  if (userId === visitingUserId) {
+    errors.userId = 'Target user id must not be the same';
+    return res.status(400).json(errors);
+  }
+
+  Connection.aggregate([{
+    $match: { user: userId }
+  }, {
+    $project: {
+      "_id": 1,
+      "user": 1,
+      "visitingUserId": visitingUserId,
+      // check if targetUserId in connections
+      "connected": {
+        $cond: {
+          if: {
+            $gte: [{
+              $indexOfArray: [
+                "$connections.user",
+                mongoose.Types.ObjectId(visitingUserId)
+              ]
+            }, 0]
+          },
+          then: true,
+          else: false
+        }
+      },
+      // check if targetUserId in pendingRequestFrom
+      "pendingRequestFrom": {
+        $cond: {
+          if: {
+            $gte: [{
+              $indexOfArray: [
+                "$pendingRequestFrom.user",
+                mongoose.Types.ObjectId(visitingUserId)
+              ]
+            }, 0]
+          },
+          then: true,
+          else: false
+        }
+      },
+      // check if targetUserId in pendingRequestTo
+      "pendingRequestTo": {
+        $cond: {
+          if: {
+            $gte: [{
+              $indexOfArray: [
+                "$pendingRequestTo.user",
+                mongoose.Types.ObjectId(visitingUserId)
+              ]
+            }, 0]
+          },
+          then: true,
+          else: false
+        }
+      }
+    }
+  }]).then(connectionDoc => {
+    res.json(connectionDoc[0]);
+  }).catch(err => res.status(400).json(err));
+}
+
+
 module.exports = {
   connectionAdd,
   conenctionRemove,
@@ -438,6 +485,7 @@ module.exports = {
   connectionDecline,
   connectionGet,
   connectionCountGet,
+  connectionStatusGet,
   pendingRequestCountGet,
   pendingRequestGet
 };

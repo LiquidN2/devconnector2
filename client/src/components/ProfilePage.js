@@ -15,6 +15,7 @@ import setAuthToken from './../utils/setAuthToken';
 
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
+import { getNumConnectionsAsync } from '../actions/connectionActions';
 
 class ProfilePage extends Component {
   componentDidMount() {
@@ -28,6 +29,8 @@ class ProfilePage extends Component {
     if (!this.props.profile._id) {
       this.props.getCurrentUserProfileAsync();
     }
+
+    this.props.getNumConnectionsAsync();
   }
 
   render() {
@@ -64,16 +67,22 @@ class ProfilePage extends Component {
               {
                 this.props.user._id ? (
                   <div className="row">
-                    <ProfileBase {...profileBase} />
+                    <ProfileBase 
+                      {...profileBase} 
+                      numConnections={this.props.numConnections}
+                    />
                   </div>
                 ) : null
               }
               {
                 this.props.profile._id ? (
                   <div className="row">
-                    <Link to="/profile/edit" className="btn btn--color-primary btn--full u-center-text">
+                    <Link 
+                      to="/profile/edit" 
+                      className="btn btn--color-primary btn--full u-center-text"
+                    >
                       Edit Profile
-                                        </Link>
+                    </Link>
                   </div>
                 ) : null
               }
@@ -135,10 +144,15 @@ const mapStateToProps = state => {
   return {
     isFetchingProfile: state.profile.isFetching,
     profile: state.profile.profile,
-    user: state.user.user
+    user: state.user.user,
+    numConnections: state.connections.numConnections
   }
 }
 
-const mapDispatchToProps = { setCurrentUserAsync, getCurrentUserProfileAsync };
+const mapDispatchToProps = { 
+  setCurrentUserAsync, 
+  getCurrentUserProfileAsync,
+  getNumConnectionsAsync 
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

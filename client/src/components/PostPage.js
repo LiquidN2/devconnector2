@@ -34,8 +34,10 @@ class PostPage extends Component {
     }
 
     // get current user posts
-    this.props.getCurrentUserPostsAsync();
-
+    if (this.props.posts.length === 0) {
+      this.props.getCurrentUserPostsAsync();
+    }
+    
     // get number of connections
     this.props.getNumConnectionsAsync();
   };
@@ -135,12 +137,6 @@ class PostPage extends Component {
                 </button>
               </div>
 
-            </div>
-
-            <div className="col-1-of-4">
-              <div className="row">
-
-              </div>
             </div>
 
           </div>

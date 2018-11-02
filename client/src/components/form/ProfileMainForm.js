@@ -168,7 +168,7 @@ export default class ProfileMainForm extends Component {
     return (
       <div className="profile-edit">
         <h2 className="profile-heading u-margin-bottom-3rem">Update Your Profile</h2>
-        <hr className="profile-text-separater" />
+        <div className="profile-text-separater"></div>
 
         <form className="u-margin-top-3rem" onSubmit={this.onSubmit}>
           <div className="row">

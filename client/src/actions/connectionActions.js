@@ -27,7 +27,15 @@ import {
 
   REMOVE_CONNECTION_REQUEST,
   REMOVE_CONNECTION_ERRORS,
-  REMOVE_CONNECTION_SUCCESS
+  REMOVE_CONNECTION_SUCCESS,
+
+  ADD_CONNECTION_REQUEST,
+  ADD_CONNECTION_ERRORS,
+  ADD_CONNECTION_SUCCESS,
+
+  CONNECTION_STATUS_REQUEST,
+  CONNECTION_STATUS_ERRORS,
+  CONNECTION_STATUS_SUCCESS
 } from './../constants/connectionActionTypes';
 
 
@@ -238,8 +246,6 @@ export const removeConnectionAsync = (userId, connectionId) => {
   return dispatch => {
     dispatch(removeConnectionRequest());
 
-    console.log(userId);
-
     // setTimeout(() => {
     //   dispatch(removeConnectionSuccess(connectionId));
     // }, 1000);
@@ -258,6 +264,74 @@ export const removeConnectionAsync = (userId, connectionId) => {
       })
       .catch(err => {
         dispatch(removeConnectionErrors(err.response.data));
+      });
+  }
+};
+
+
+const addConnectionRequest = () => ({
+  type: ADD_CONNECTION_REQUEST
+});
+
+const addConnectionErrors = errors => ({
+  type: ADD_CONNECTION_ERRORS,
+  errors
+});
+
+const addConnectionSuccess = () => ({
+  type: ADD_CONNECTION_SUCCESS
+});
+
+export const addConnectionAsync = ({ userId, profileId, selfProfileId }) => {
+  return dispatch => {
+    dispatch(addConnectionRequest());
+
+    // setTimeout(() => {
+    //   dispatch(addConnectionSuccess());
+    // }, 1000);
+    
+    return axios.post('/api/connections', { userId, profileId, selfProfileId })
+      .then(res => {
+        if (res.data.connectionSent) {
+          dispatch(addConnectionSuccess());
+        } else {
+          dispatch(addConnectionErrors(res.data.errors));
+        }
+      })
+      .catch(err => {
+        dispatch(addConnectionErrors(err.response.data));
+      });
+  }
+};
+
+
+const connectionStatusRequest = () => ({
+  type: CONNECTION_STATUS_REQUEST
+});
+
+const connectionStatusrrors = errors => ({
+  type: CONNECTION_STATUS_ERRORS,
+  errors
+});
+
+const connectionStatusSuccess = ({ visitingUserId, connected, pendingRequestFrom, pendingRequestTo }) => ({
+  type: CONNECTION_STATUS_SUCCESS,
+  visitingUserId,
+  connected,
+  pendingRequestFrom,
+  pendingRequestTo
+});
+
+export const getConnectionStatusAsync = userId => {
+  return dispatch => {
+    dispatch(connectionStatusRequest());
+    
+    return axios.get(`/api/connections/status/${userId}`)
+      .then(res => {
+        dispatch(connectionStatusSuccess(res.data));
+      })
+      .catch(err => {
+        dispatch(connectionStatusrrors(err.response.data));
       });
   }
 };

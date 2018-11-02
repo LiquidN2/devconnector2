@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class PendingRequestItem extends Component {
   handleApprove = event => {
@@ -20,10 +21,14 @@ export default class PendingRequestItem extends Component {
   render() {
     return (
       <div className="connection-item">
-        <img src={this.props.user.avatar} alt={this.props.user.name} className="connection-item__user-photo" />
+        <Link to={`/profile/${this.props.user._id}`}>
+          <img src={this.props.user.avatar} alt={this.props.user.name} className="connection-item__user-photo" />
+        </Link>
         <div className="connection-item__main-content">
           <div className="connection-item__description">
-            <p className="connection-item__user-name">{this.props.user.name}</p>
+            <Link to={`/profile/${this.props.user._id}`}>
+              <p className="connection-item__user-name">{this.props.user.name}</p>
+            </Link>
             <p className="connection-item__user-text connection-item__user-text--color">
               {
                 this.props.profile.company ? (

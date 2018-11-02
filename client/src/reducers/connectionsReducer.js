@@ -29,7 +29,12 @@ import {
 
   REMOVE_CONNECTION_REQUEST,
   REMOVE_CONNECTION_ERRORS,
-  REMOVE_CONNECTION_SUCCESS
+  REMOVE_CONNECTION_SUCCESS,
+
+  ADD_CONNECTION_REQUEST,
+  ADD_CONNECTION_ERRORS,
+  ADD_CONNECTION_SUCCESS
+
 } from './../constants/connectionActionTypes';
 
 const initialState = {
@@ -40,6 +45,11 @@ const initialState = {
   requestApproved: false,
   isDecliningRquest: false,
   isRemovingConnection: false,
+  
+  isFetchingConnectionStatus: false,
+  isAddingConnection: false,
+  connectionSent: false,
+  
   numConnections: 0,
   numPendingRequests: 0,
   connections: [],
@@ -200,6 +210,27 @@ const connectionReducer = (state = initialState, action) => {
         pendingRequests: postDeclinePendingRequests
       };
 
+    case ADD_CONNECTION_REQUEST:
+      return {
+        ...state,
+        isAddingConnection: true,
+        connectionSent: false
+      };
+
+    case ADD_CONNECTION_ERRORS:
+      return {
+        ...state,
+        isAddingConnection: false,
+        connectionSent: false
+      };
+    
+    case ADD_CONNECTION_SUCCESS:
+      return {
+        ...state,
+        isAddingConnection: false,
+        connectionSent: true
+      };
+    
     case USER_LOGOUT:
       return {
         ...initialState

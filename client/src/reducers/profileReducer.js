@@ -1,6 +1,4 @@
-import {
-  USER_LOGOUT
-} from './../constants/authActionTypes';
+import { USER_LOGOUT } from '../constants/authActionTypes';
 
 import { 
   GET_CURRENT_USER_PROFILE,
@@ -15,7 +13,7 @@ import {
   CURRENT_USER_EDUCATION_REQUEST,
   CURRENT_USER_EDUCATION_ERRORS,
   CURRENT_USER_EDUCATION_SUCCESS
-} from './../constants/profileActionTypes';
+} from '../constants/profileActionTypes';
 
 const initialState = {
   isFetching: false,
