@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import setAuthToken from './../utils/setAuthToken';
+
 // load components
 import Header from './header/Header';
 import AvatarBox from './profile/AvatarBox';
@@ -8,12 +10,11 @@ import PostEntry from './post/PostEntry';
 import PostItem from './post/PostItem';
 import Loading from './Loading';
 
-import setAuthToken from './../utils/setAuthToken';
-
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getNumConnectionsAsync } from './../actions/connectionActions';
-import { 
+import {
+  getCurrentUserPostCountAsync, 
   getCurrentUserPostsAsync, 
   createPostAsync, 
   deletePostAsync, 
@@ -40,6 +41,8 @@ class PostPage extends Component {
     
     // get number of connections
     this.props.getNumConnectionsAsync();
+
+    this.props.getCurrentUserPostCountAsync();
   };
 
   handleCreatePost = postText => {
@@ -49,12 +52,14 @@ class PostPage extends Component {
       text: postText
     }
     this.props.createPostAsync(newPost);
+    this.props.getCurrentUserPostCountAsync();
     // console.log(newPost);
   };
 
   handleDeletePost = postId => {
     // console.log(postId);
     this.props.deletePostAsync(postId);
+    this.props.getCurrentUserPostCountAsync();
   };
 
   handleLikeToggle = postId => {
@@ -93,7 +98,9 @@ class PostPage extends Component {
               <div className="row">
                 <AvatarBox 
                   user={this.props.user} 
+                  profile={this.props.profile}
                   numConnections={this.props.connections.numConnections}
+                  numPosts={this.props.numPosts}
                 />
               </div>
             </div>
@@ -148,16 +155,19 @@ class PostPage extends Component {
 
 const mapStateToProps = state => ({
   user: state.user.user,
+  profile: state.profile.profile,
   connections: state.connections,
   isFetchingPosts: state.posts.isFetching,
   postErrors: state.errors.post,
-  posts: state.posts.posts
+  posts: state.posts.posts,
+  numPosts: state.posts.numPosts
 });
 
 const mapDispatchToProps = {
   setCurrentUserAsync,
   getNumConnectionsAsync,
   getCurrentUserPostsAsync,
+  getCurrentUserPostCountAsync,
   createPostAsync,
   deletePostAsync,
   postLikeToggleAsync,

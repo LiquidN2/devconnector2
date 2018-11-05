@@ -23,13 +23,13 @@ export default class NavBar extends Component {
 
       default:
         links = [{
-          urlValue: this.props.visitingUserId ? `/profile/${this.props.visitingUserId}` : '/profile',
+          urlValue: this.props.visitingUserId ? `/profile/user/${this.props.visitingUserId}` : '/profile',
           urlLabel: 'Profile'
         }, {
-          urlValue: this.props.visitingUserId ? `/posts/${this.props.visitingUserId}` : '/posts',
+          urlValue: this.props.visitingUserId ? `/posts/user/${this.props.visitingUserId}` : '/posts',
           urlLabel: 'Posts'
         }, {
-          urlValue: this.props.visitingUserId ? `/connections/${this.props.visitingUserId}` : '/connections',
+          urlValue: this.props.visitingUserId ? `/connections/user/${this.props.visitingUserId}` : '/connections',
           urlLabel: 'Connections'
         }];
     }

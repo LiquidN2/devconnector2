@@ -14,12 +14,39 @@ const router = express.Router();
 router.get('/test', (req, res) => res.json({ msg: "Posts works" }));
 
 // @route   GET api/posts
-// @desc    Get 50 posts
+// @desc    Get posts (maximum 5 post per page)
 // @access  Private
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   postController.postGet
+);
+
+// @route   GET api/posts/count
+// @desc    Get number of posts of current user
+// @access  Private
+router.get(
+  '/count',
+  passport.authenticate('jwt', { session: false }),
+  postController.postCountGet
+);
+
+// @route   GET api/posts/count
+// @desc    Get number of posts of current user
+// @access  Private
+router.get(
+  '/count/user/:userId',
+  passport.authenticate('jwt', { session: false }),
+  postController.postCountByUserIdGet
+);
+
+// @route   GET api/posts/user/:userId
+// @desc    Get posts by userID (maximum 5 post per page)
+// @access  Private
+router.get(
+  '/user/:userId',
+  passport.authenticate('jwt', { session: false }),
+  postController.postByUserIdGet
 );
 
 // @route   POST api/posts

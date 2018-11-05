@@ -14,6 +14,7 @@ import Connections from './connection/Connections';
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
+import { getCurrentUserPostCountAsync } from '../actions/postActions';
 import { 
   getNumConnectionsAsync, 
   getConnectionsAsync,
@@ -36,9 +37,13 @@ class ConnectionPage extends Component {
       this.props.getCurrentUserProfileAsync();
     }
 
-    this.props.getNumConnectionsAsync();
+    if (!this.props.numConnections) {
+      this.props.getNumConnectionsAsync();
+    }
 
     this.props.getConnectionsAsync(this.state.pageNum);
+
+    this.props.getCurrentUserPostCountAsync();
   };
 
   handleShowMoreConnections = () => {
@@ -65,7 +70,9 @@ class ConnectionPage extends Component {
               <div className="row">
                 <AvatarBox
                   user={this.props.user}
+                  profile={this.props.profile}
                   numConnections={this.props.numConnections}
+                  numPosts={this.props.numPosts}
                 />
               </div>
             </div>
@@ -92,11 +99,13 @@ const mapStateToProps = state => ({
   profile: state.profile.profile,
   isFetchingConnections: state.connections.isFetchingConnections,
   numConnections: state.connections.numConnections,
-  connections: state.connections.connections
+  connections: state.connections.connections,
+  numPosts: state.posts.numPosts
 });
 
 const mapDispatchToProps = {
   setCurrentUserAsync,
+  getCurrentUserPostCountAsync,
   getNumConnectionsAsync,
   getConnectionsAsync,
   getCurrentUserProfileAsync,

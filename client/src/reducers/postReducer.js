@@ -6,29 +6,60 @@ import {
   CURRENT_USER_POSTS_REQUEST,
   CURRENT_USER_POSTS_ERRORS,
   CURRENT_USER_POSTS_SUCCESS,
+
+  CURRENT_USER_POST_COUNT_REQUEST,
+  CURRENT_USER_POST_COUNT_ERRORS,
+  CURRENT_USER_POST_COUNT_SUCCESS,
+
   CURRENT_USER_POSTS_CREATE_REQUEST,
   CURRENT_USER_POSTS_CREATE_ERRORS,
   CURRENT_USER_POSTS_CREATE_SUCCESS,
+
   CURRENT_USER_POSTS_DELETE_REQUEST,
   CURRENT_USER_POSTS_DELETE_ERRORS,
   CURRENT_USER_POSTS_DELETE_SUCCESS,
+  
   CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
   CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
   CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS,
+  
   CREATE_COMMENT_REQUEST,
   CREATE_COMMENT_ERRORS,
-  CREATE_COMMENT_SUCCESS
+  CREATE_COMMENT_SUCCESS,
+
 } from './../constants/postActionTypes';
 
 const initialState = {
+  isFetchingCount: false,
   isFetching: false,
   isUpdating: false,
   isUpdated: false,
+  numPosts: 0,
   posts: []
 }
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
+
+    case CURRENT_USER_POST_COUNT_REQUEST:
+      return {
+        ...state,
+        isFetchingCount: true
+      };
+
+    case CURRENT_USER_POST_COUNT_ERRORS:
+      return {
+        ...state,
+        isFetchingCount: false
+      };
+
+    case CURRENT_USER_POST_COUNT_SUCCESS:
+      return {
+        ...state,
+        isFetchingCount: false,
+        numPosts: action.numPosts
+      };
+
     case CURRENT_USER_POSTS_REQUEST:
       return {
         ...state,

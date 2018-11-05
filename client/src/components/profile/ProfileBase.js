@@ -4,7 +4,7 @@ import SocialItem from './SocialItem';
 
 export default class ProfileBase extends Component {
   render() {
-    const { user, handle, website, location, social, githubUser, numConnections } = this.props;
+    const { user, handle, website, location, social, githubUser, numConnections, numPosts } = this.props;
     let email, linkedin, facebook, twitter, instagram, youtube;
     if (user) email = user.email;
     if (social) {
@@ -25,14 +25,18 @@ export default class ProfileBase extends Component {
 
         {
           numConnections > 0 ? (
-            <div className="profile-base__connections-views">
-              <div className="profile-base__connections-views-box">
-                <p className="profile-base__connections-views-count">{numConnections}</p>
-                <p className="profile-base__connections-views-text">{numConnections > 1 ? 'connections' : 'connection'}</p>
+            <div className="profile-base__connections-posts">
+              <div className="profile-base__connections-posts-box">
+                <p className="profile-base__connections-posts-count">{numConnections}</p>
+                <p className="profile-base__connections-posts-text">
+                  {numConnections > 1 ? 'connections' : 'connection'}
+                </p>
               </div>
-              <div className="profile-base__connections-views-box">
-                <p className="profile-base__connections-views-count">450</p>
-                <p className="profile-base__connections-views-text">views</p>
+              <div className="profile-base__connections-posts-box">
+                <p className="profile-base__connections-posts-count">{numPosts}</p>
+                <p className="profile-base__connections-posts-text">
+                  {numPosts > 1 ? 'posts' : 'post'}
+                </p>
               </div>
             </div>
           ) : null

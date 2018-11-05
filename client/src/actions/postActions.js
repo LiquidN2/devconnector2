@@ -4,19 +4,70 @@ import {
   CURRENT_USER_POSTS_REQUEST,
   CURRENT_USER_POSTS_ERRORS,
   CURRENT_USER_POSTS_SUCCESS,
+
+  CURRENT_USER_POST_COUNT_REQUEST,
+  CURRENT_USER_POST_COUNT_ERRORS,
+  CURRENT_USER_POST_COUNT_SUCCESS,
+  
   CURRENT_USER_POSTS_CREATE_REQUEST,
   CURRENT_USER_POSTS_CREATE_ERRORS,
   CURRENT_USER_POSTS_CREATE_SUCCESS,
+  
   CURRENT_USER_POSTS_DELETE_REQUEST,
   CURRENT_USER_POSTS_DELETE_ERRORS,
   CURRENT_USER_POSTS_DELETE_SUCCESS,
+  
   CURRENT_USER_POSTS_LIKE_TOGGLE_REQUEST,
   CURRENT_USER_POSTS_LIKE_TOGGLE_ERRORS,
   CURRENT_USER_POSTS_LIKE_TOGGLE_SUCCESS,
+  
   CREATE_COMMENT_REQUEST,
   CREATE_COMMENT_ERRORS,
-  CREATE_COMMENT_SUCCESS
+  CREATE_COMMENT_SUCCESS,
+
+  // POSTS_BY_USER_ID_REQUEST,
+  // POSTS_BY_USER_ID_ERRORS,
+  // POSTS_BY_USER_ID_SUCCESS
+
+  POST_COUNT_BY_USER_ID_REQUEST,
+  POST_COUNT_BY_USER_ID_ERRORS,
+  POST_COUNT_BY_USER_ID_SUCCESS
 } from './../constants/postActionTypes';
+
+
+const currentUserPostCountRequest = () => ({
+  type: CURRENT_USER_POST_COUNT_REQUEST
+});
+
+const currentUserPostCountErrors = errors => ({
+  type: CURRENT_USER_POST_COUNT_ERRORS,
+  errors
+});
+
+const currentUserPostCountSuccess = ({ numPosts }) => ({
+  type: CURRENT_USER_POST_COUNT_SUCCESS,
+  numPosts
+});
+
+export const getCurrentUserPostCountAsync = () => {
+  return dispatch => {
+    dispatch(currentUserPostCountRequest());
+
+    // setTimeout(() => {
+    //   dispatch(currentUserPostCountSuccess(10));
+    // }, 500);
+    
+    return axios.get(`/api/posts/count`)
+      .then(res => {
+        dispatch(currentUserPostCountSuccess(res.data));
+      })
+      .catch(err => {
+        dispatch(currentUserPostCountErrors(err.response.data));
+      });
+  }
+};
+
+
 
 const currentUserPostsRequest = () => ({
   type: CURRENT_USER_POSTS_REQUEST
@@ -32,7 +83,6 @@ const currentUserPostsSuccess = (posts, page) => ({
   page,
   posts
 });
-
 
 export const getCurrentUserPostsAsync = pageNumber => {
   return dispatch => {
@@ -156,4 +206,34 @@ export const createCommentAsync = (postId, commentData) => {
         dispatch(createCommentErrors(err.response.data));
       });
   };
+};
+
+
+const postCountByUserIdRequest = () => ({
+  type: POST_COUNT_BY_USER_ID_REQUEST
+});
+
+const postCountByUserIdErrors = errors => ({
+  type: POST_COUNT_BY_USER_ID_ERRORS,
+  errors
+});
+
+const postCountByUserIdSuccess = ({ numPosts }) => ({
+  type: POST_COUNT_BY_USER_ID_SUCCESS,
+  numPosts
+});
+
+export const getPostCountByUserIdAsync = userId => {
+  return dispatch => {
+    dispatch(postCountByUserIdRequest());
+    // dispatch(postCountByUserIdSuccess({ numPosts: 10 }));
+
+    return axios.get(`/api/posts/count/user/${userId}`)
+      .then(res => {
+        dispatch(postCountByUserIdSuccess(res.data));
+      })
+      .catch(err => {
+        dispatch(postCountByUserIdErrors(err.response.data));
+      })
+  }
 };

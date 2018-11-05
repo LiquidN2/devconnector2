@@ -13,6 +13,7 @@ import connectionReducer from './connectionsReducer';
 
 import visitingProfileReducer from './visitingProfileReducer';
 import visitingConnectionsReducer from './visitingConnectionsReducer';
+import visitingPostsReducer from './visitingPostsReducer';
 
 
 const rootReducer = combineReducers({
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     posts: postReducer,
     connections: connectionReducer,
     visitingProfile: visitingProfileReducer,
-    visitingConnections: visitingConnectionsReducer
+    visitingConnections: visitingConnectionsReducer,
+    visitingPosts: visitingPostsReducer
 });
 
 export default rootReducer;

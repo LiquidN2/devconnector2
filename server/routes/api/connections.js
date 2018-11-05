@@ -28,6 +28,16 @@ router.get(
   connectionController.connectionCountGet
 );
 
+// @route   GET api/connections/count/user/:userId
+// @desc    get number of connections by userID
+// @access  Private
+router.get(
+  '/count/user/:userId', 
+  passport.authenticate('jwt', { session: false }),
+  connectionController.connectionCountByUserIdGet
+);
+
+
 // @route   GET api/connections/pending
 // @desc    get pending connections
 // @access  Private
@@ -50,7 +60,7 @@ router.get(
 // @desc    get connection status with user Id
 // @access  Private
 router.get(
-  '/status/:userId', 
+  '/status/user/:userId', 
   passport.authenticate('jwt', { session: false }),
   connectionController.connectionStatusGet
 );

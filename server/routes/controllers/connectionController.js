@@ -368,6 +368,21 @@ const connectionCountGet = (req, res) => {
     .catch(err => res.status(400).send(err));
 };
 
+const connectionCountByUserIdGet = (req, res) => {
+  const errors = {};
+  const userId = req.params.userId;
+
+  Connection.findOne({ user: userId })
+    .then(doc => {
+      if (!doc || doc.connections.length === 0) {
+        res.json({ numConnections: 0 });
+      } else {
+        res.json({ numConnections: doc.connections.length });
+      }
+    })
+    .catch(err => res.status(400).send(err));
+}
+
 
 const pendingRequestCountGet = (req, res) => {
   // const errors = {};
@@ -485,6 +500,7 @@ module.exports = {
   connectionDecline,
   connectionGet,
   connectionCountGet,
+  connectionCountByUserIdGet,
   connectionStatusGet,
   pendingRequestCountGet,
   pendingRequestGet

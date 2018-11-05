@@ -1,3 +1,5 @@
+// import './styles/main.scss';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -10,6 +12,7 @@ import store from './store';
 import moment from 'moment';
 import 'moment/locale/en-au';
 moment.locale('en-au');
+
 
 // console.log(typeof moment('Oct2000', 'MMMYYYY').valueOf())
 // console.log(moment(970318800000).format())

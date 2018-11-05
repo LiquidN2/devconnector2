@@ -24,12 +24,12 @@ export default class ConnectionItem extends Component {
   render() {
     return (
       <div className="connection-item">
-        <Link to={`/profile/${this.props.user._id}`}>
+        <Link to={`/profile/user/${this.props.user._id}`}>
           <img src={this.props.user.avatar} alt={this.props.user.name} className="connection-item__user-photo" />
         </Link>
         <div className="connection-item__main-content">
           <div className="connection-item__description">
-            <Link to={`/profile/${this.props.user._id}`}>
+            <Link to={`/profile/user/${this.props.user._id}`}>
               <p className="connection-item__user-name">{this.props.user.name}</p>
             </Link>
             <p className="connection-item__user-text connection-item__user-text--color">

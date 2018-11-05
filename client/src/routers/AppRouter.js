@@ -7,6 +7,8 @@ import LoginPage from '../components/auth/LoginPage';
 import RegisterPage from '../components/auth/RegisterPage';
 
 import PostPage from '../components/PostPage';
+import PostByUserIdPage from '../components/PostByUserIdPage';
+
 import ConnectionPage from '../components/ConnectionPage';
 
 import ProfilePage from '../components/ProfilePage';
@@ -32,10 +34,12 @@ const AppRouter = () => {
         <PrivateRoute path="/profile/edit/education" component={EducationEditPage} />
         <PrivateRoute path="/profile/edit" component={ProfileEditPage} />
         <PrivateRoute path="/profile/create" component={ProfileEditPage} />
-        <PrivateRoute path="/profile/:userId" component={ProfileByUserIdPage} />
+        <PrivateRoute path="/profile/user/:userId" component={ProfileByUserIdPage} />
         <PrivateRoute path="/profile" component={ProfilePage} />
 
+        <PrivateRoute path="/posts/user/:userId" component={PostByUserIdPage} />
         <PrivateRoute path="/posts" component={PostPage} />
+        
         <PrivateRoute path="/connections" component={ConnectionPage} />
       </Switch>
     </Router>

@@ -12,7 +12,9 @@ import {
 
 class PendingRequest extends Component {
   componentDidMount = () => {
-    this.props.getPendingRequestsAsync();
+    if (!this.props.numPendingRequests) {
+      this.props.getPendingRequestsAsync();
+    }
   };
 
   onApproveConnection = approvalData => {

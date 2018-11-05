@@ -10,7 +10,7 @@ const postGet = (req, res) => {
 
   // pagination
   const pageNumber = req.query.pageNumber ? req.query.pageNumber : 0;
-  const nPerPage = 3;
+  const nPerPage = 5;
 
   Post.find({ user: userId })
     // .select({ comments: 0 })
@@ -43,6 +43,21 @@ const postGet = (req, res) => {
       return res.status(200).json(postArr);
     })
     .catch(err => res.status(400).send(err));
+}
+
+const postCountGet = (req, res) => {
+  const errors = {};
+  const userId = req.user._id;
+
+  Post.count({ user: userId })
+    .then(numPosts => {
+      if (!numPosts) {
+        errors.postCount = 'no post'
+        return res.status(404).json(errors);
+      }
+      res.json({ numPosts });
+    })
+    .catch(err => res.status(400).send());
 }
 
 const postCreate = (req, res) => {
@@ -149,11 +164,69 @@ const postByIdGet = (req, res) => {
     .catch(err => res.status(400).send(err));
 };
 
+const postByUserIdGet = (req, res) => {
+  const errors = {};
+  const { userId } = req.params;
+
+  // pagination
+  const pageNumber = req.query.pageNumber ? req.query.pageNumber : 0;
+  const nPerPage = 5;
+
+  Post.find({ user: userId })
+    // .select({ comments: 0 })
+    .sort({ date: -1 })
+    .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
+    .limit(nPerPage)
+    .then(posts => {
+      if (!posts) {
+        errors.post = 'No post found';
+        return res.status(404).json(errors);
+      }
+
+      let postArr = [];
+      posts.forEach(post => {
+        const { _id, user, name, avatar, text, date, likes, comments } = post;
+        postArr.push({
+          _id,
+          user,
+          name,
+          avatar,
+          text,
+          likes,
+          comments,
+          date,
+          numLikes: likes.length,
+          numComments: comments.length
+        });
+      });
+
+      return res.status(200).json(postArr);
+    })
+    .catch(err => res.status(400).send(err));
+};
+
+const postCountByUserIdGet = (req, res) => {
+  const errors = {};
+  const { userId } = req.params;
+
+  Post.count({ user: userId })
+    .then(numPosts => {
+      if (!numPosts) {
+        errors.postCount = 'no post'
+        return res.status(404).json(errors);
+      }
+      res.json({ numPosts });
+    })
+    .catch(err => res.status(400).send());
+}
 
 module.exports = {
   postGet,
+  postCountGet,
   postCreate,
   postByIdDelete,
   postByIdUpdate,
-  postByIdGet
+  postByIdGet,
+  postByUserIdGet,
+  postCountByUserIdGet
 };

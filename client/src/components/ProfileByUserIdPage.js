@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+import history from '../routers/history';
 
 import setAuthToken from '../utils/setAuthToken';
 
@@ -16,19 +19,22 @@ import Loading from './Loading';
 import { setCurrentUserAsync } from '../actions/userActions';
 
 import {
-  getCurrentUserProfileAsync, 
-  getProfileByUserIdAsync 
+  getCurrentUserProfileAsync,
+  getProfileByUserIdAsync
 } from '../actions/profileActions';
 
-import { 
+import {
+  getConnectionCountByUserIdAsync,
   getConnectionStatusAsync,
-  addConnectionAsync 
-} from '../actions/connectionActions'; 
+  addConnectionAsync
+} from '../actions/connectionActions';
+
+import { getPostCountByUserIdAsync } from '../actions/postActions';
 
 let selfUserId,
-    selfProfileId, 
-    visitingUserId,
-    visitingProfileId;
+  selfProfileId,
+  visitingUserId,
+  visitingProfileId;
 
 class ProfileByIdPage extends Component {
 
@@ -52,8 +58,23 @@ class ProfileByIdPage extends Component {
 
       // connection status with this user by userId
       this.props.getConnectionStatusAsync(visitingUserId);
+
+      // get number of connections this user has
+      this.props.getConnectionCountByUserIdAsync(visitingUserId);
+
+      // get number of connections this user has
+      this.props.getPostCountByUserIdAsync(visitingUserId);
     }
+
   };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (this.props.match.params.userId === this.props.user._id) {
+      console.log('same id as current user. redirecting...');
+      history.push('/profile');
+    }
+  }
+
 
   handleConnectionAdd = () => {
     if (selfUserId && selfProfileId && visitingUserId && visitingProfileId) {
@@ -86,9 +107,11 @@ class ProfileByIdPage extends Component {
     const { bio, skills, experience, education } = this.props.visitingProfile;
 
     // connection status
-    const { connected, pendingRequestFrom, pendingRequestTo } = this.props.visitingConnections;
+    const { connected, pendingRequestFrom, pendingRequestTo, numConnections } = this.props.visitingConnections;
     const allowAddConnection = !connected && !pendingRequestFrom && !pendingRequestTo;
 
+    // posts count
+    const { numPosts } = this.props.visitingPosts;
 
     return (
       <React.Fragment>
@@ -109,21 +132,27 @@ class ProfileByIdPage extends Component {
             <div className="col-1-of-4">
               <div className="row">
                 {
-                  visitingProfileId ? <ProfileBase {...profileBase} /> : null
+                  visitingProfileId ? (
+                    <ProfileBase 
+                      {...profileBase} 
+                      numConnections={numConnections}
+                      numPosts={numPosts}
+                    />
+                  ) : null
                 }
               </div>
 
               {
                 (visitingProfileId && allowAddConnection && !connectionSent) ? (
                   <div className="row">
-                    <button 
+                    <button
                       className="btn btn--color-primary btn--full u-center-text"
                       onClick={this.handleConnectionAdd}
                       disabled={isAddingConnection}
-                    > 
+                    >
                       <i className="fas fa-user-plus"></i>&nbsp;
                       Add Connections
-                    </button>
+                      </button>
                   </div>
                 ) : null
               }
@@ -155,7 +184,7 @@ class ProfileByIdPage extends Component {
                         </div>
                       ) : null
                     }
-                    
+
                     {
                       education.length > 0 ? (
                         <div className="row">
@@ -187,7 +216,7 @@ class ProfileByIdPage extends Component {
           </div>
         </section>
       </React.Fragment>
-    )
+    );
   }
 }
 
@@ -198,7 +227,8 @@ const mapStateToProps = state => ({
   visitingProfile: state.visitingProfile.profile,
   visitingConnections: state.visitingConnections,
   isAddingConnection: state.connections.isAddingConnection,
-  connectionSent: state.connections.connectionSent
+  connectionSent: state.connections.connectionSent,
+  visitingPosts: state.visitingPosts
 });
 
 const mapDispatchToProps = {
@@ -206,7 +236,9 @@ const mapDispatchToProps = {
   getProfileByUserIdAsync,
   getConnectionStatusAsync,
   getCurrentUserProfileAsync,
-  addConnectionAsync
+  addConnectionAsync,
+  getConnectionCountByUserIdAsync,
+  getPostCountByUserIdAsync
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileByIdPage);

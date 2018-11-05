@@ -35,7 +35,11 @@ import {
 
   CONNECTION_STATUS_REQUEST,
   CONNECTION_STATUS_ERRORS,
-  CONNECTION_STATUS_SUCCESS
+  CONNECTION_STATUS_SUCCESS,
+
+  CONNECTION_COUNT_BY_USER_ID_REQUEST,
+  CONNECTION_COUNT_BY_USER_ID_ERRORS,
+  CONNECTION_COUNT_BY_USER_ID_SUCCESS
 } from './../constants/connectionActionTypes';
 
 
@@ -326,7 +330,7 @@ export const getConnectionStatusAsync = userId => {
   return dispatch => {
     dispatch(connectionStatusRequest());
     
-    return axios.get(`/api/connections/status/${userId}`)
+    return axios.get(`/api/connections/status/user/${userId}`)
       .then(res => {
         dispatch(connectionStatusSuccess(res.data));
       })
@@ -334,4 +338,33 @@ export const getConnectionStatusAsync = userId => {
         dispatch(connectionStatusrrors(err.response.data));
       });
   }
+};
+
+
+const connectionCountByUserIdRequest = () => ({
+  type: CONNECTION_COUNT_BY_USER_ID_REQUEST
+});
+
+const connectionCountByUserIdErrors = errors => ({
+  type: CONNECTION_COUNT_BY_USER_ID_ERRORS,
+  errors
+});
+
+const connectionCountByUserIdSuccess = ({ numConnections }) => ({
+  type: CONNECTION_COUNT_BY_USER_ID_SUCCESS,
+  numConnections
+});
+
+export const getConnectionCountByUserIdAsync = userId => {
+  return dispatch => {
+    dispatch(connectionCountByUserIdRequest());
+    // dispatch(connectionCountByUserIdSuccess({ numConnections: 15 }));
+    return axios.get(`/api/connections/count/user/${userId}`)
+      .then(res => {
+        dispatch(connectionCountByUserIdSuccess(res.data));
+      })
+      .catch(err => {
+        dispatch(connectionCountByUserIdErrors(err.response.data));
+      });
+  };
 };

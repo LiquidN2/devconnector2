@@ -16,6 +16,7 @@ import setAuthToken from './../utils/setAuthToken';
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
 import { getNumConnectionsAsync } from '../actions/connectionActions';
+import { getCurrentUserPostCountAsync } from '../actions/postActions';
 
 class ProfilePage extends Component {
   componentDidMount() {
@@ -31,6 +32,8 @@ class ProfilePage extends Component {
     }
 
     this.props.getNumConnectionsAsync();
+
+    this.props.getCurrentUserPostCountAsync();
   }
 
   render() {
@@ -70,6 +73,7 @@ class ProfilePage extends Component {
                     <ProfileBase 
                       {...profileBase} 
                       numConnections={this.props.numConnections}
+                      numPosts={this.props.numPosts}
                     />
                   </div>
                 ) : null
@@ -140,19 +144,20 @@ class ProfilePage extends Component {
   }
 };
 
-const mapStateToProps = state => {
-  return {
-    isFetchingProfile: state.profile.isFetching,
-    profile: state.profile.profile,
-    user: state.user.user,
-    numConnections: state.connections.numConnections
-  }
-}
+const mapStateToProps = state => ({
+  isFetchingProfile: state.profile.isFetching,
+  profile: state.profile.profile,
+  user: state.user.user,
+  numConnections: state.connections.numConnections,
+  isFetchingPostCount: state.posts.isFetchingCount,
+  numPosts: state.posts.numPosts
+});
 
 const mapDispatchToProps = { 
   setCurrentUserAsync, 
   getCurrentUserProfileAsync,
-  getNumConnectionsAsync 
+  getNumConnectionsAsync,
+  getCurrentUserPostCountAsync
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

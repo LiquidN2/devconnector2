@@ -12,53 +12,49 @@ import { userLogin, clearLoginErrors } from '../../actions/authActions';
 
 class LoginPage extends React.Component {
 
-    userLogin = user => {
-        this.props.userLogin(user);
-    };
+  userLogin = user => {
+    this.props.userLogin(user);
+  };
 
-    render() {
+  render() {
 
-        const { isFetching: isFetchingAuth } = this.props.auth;
-        const errors = this.props.errors;
+    const { isFetching: isFetchingAuth } = this.props.auth;
+    const errors = this.props.errors;
 
-        return(
-            <section className="section-login-registration">
-                <div className="form-wrapper">
-                    <AuthNavHeader />
+    return (
+      <section className="section-login-registration">
+        <div className="form-wrapper">
+          <AuthNavHeader />
 
-                    {
-                        isFetchingAuth ? (
-                            <Loading />
-                        ) : (
-                            <LoginForm onSubmit={this.userLogin} />
-                        )
-                    }
-                   
-                    {
-                        Object.keys(errors).length !== 0 ? (
-                            <ErrorNotification errors={errors} /> 
-                        ) : (
-                            null
-                        )
-                    }
-                </div>
-            </section>    
-        );
-    }
+          {
+            isFetchingAuth ? (
+              <Loading />
+            ) : (
+              <LoginForm onSubmit={this.userLogin} />
+            )
+          }
+
+          {
+            Object.keys(errors).length !== 0 ? (
+              <ErrorNotification errors={errors} />
+            ) : null
+          }
+        </div>
+      </section>
+    );
+  }
 }
 
 LoginPage.propTypes = {
-    auth: PropTypes.object.isRequired,
-    errors: PropTypes.object,
-    userLogin: PropTypes.func.isRequired
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object,
+  userLogin: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth,
-        errors: state.errors.login || {}
-    };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors.login || {}
+});
 
 const mapDispatchToProps = { userLogin, clearLoginErrors };
 
