@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import PostForm from './../form/PostForm';
 
@@ -7,11 +8,11 @@ export default class PostEntry extends Component {
     return (
       <div className="post-form-box">
         <div className="post-form-tab">
-          <a href="#" className="post-form-tab__item post-form-tab__item--active">
+          <NavLink to="/posts" className="post-form-tab__item" activeClassName="post-form-tab__item--active">
             <span className="post-form-tab__icon"><i className="fas fa-pen"></i></span>
             <span className="post-form-tab__text">Share an update</span>
-          </a>
-          <a href="#" className="post-form-tab__item">
+          </NavLink>
+          <a href="/" className="post-form-tab__item">
             <span className="post-form-tab__icon"><i className="fas fa-camera"></i></span>
             <span className="post-form-tab__text">Upload a photo</span>
           </a>

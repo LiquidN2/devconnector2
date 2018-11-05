@@ -119,6 +119,7 @@ class PostPage extends Component {
                   return (
                     <div key={post._id} className="row">
                       <PostItem 
+                        userId={this.props.user._id}
                         {...post}
                         handleLikeToggle={this.handleLikeToggle} 
                         handleDeletePost={this.handleDeletePost}

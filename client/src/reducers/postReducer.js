@@ -76,6 +76,7 @@ const postReducer = (state = initialState, action) => {
     case CURRENT_USER_POSTS_SUCCESS:
       if (action.page > 1) {
         return {
+          ...state,
           isFetching: false,
           posts: [
             ...state.posts,
@@ -84,6 +85,7 @@ const postReducer = (state = initialState, action) => {
         }
       } else {
         return {
+          ...state,
           isFetching: false,
           posts: action.posts
         }
@@ -114,6 +116,7 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isUpdating: false,
         isUpdated: true,
+        numPosts: state.numPosts + 1,
         posts: [
           action.newPost,
           ...state.posts
@@ -129,6 +132,7 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isUpdating: false,
         isUpdated: true,
+        numPosts: state.numPosts - 1,
         posts: updatedPosts
       }
     

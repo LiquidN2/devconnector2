@@ -77,6 +77,7 @@ class ProfileEditPage extends Component {
                     <ProfileBase
                       {...profileBase}
                       numConnections={this.props.numConnections}
+                      numPosts={this.props.numPosts}
                     />
                   ) : null
                 }
@@ -118,7 +119,8 @@ const mapStateToProps = state => ({
     profileErrors: state.errors.profile,
     profile: state.profile.profile,
 
-    numConnections: state.connections.numConnections
+    numConnections: state.connections.numConnections,
+    numPosts: state.posts.numPosts
 });
 
 const mapDispatchToProps = {

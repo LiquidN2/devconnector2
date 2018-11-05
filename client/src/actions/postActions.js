@@ -25,13 +25,21 @@ import {
   CREATE_COMMENT_ERRORS,
   CREATE_COMMENT_SUCCESS,
 
-  // POSTS_BY_USER_ID_REQUEST,
-  // POSTS_BY_USER_ID_ERRORS,
-  // POSTS_BY_USER_ID_SUCCESS
+  POSTS_BY_USER_ID_REQUEST,
+  POSTS_BY_USER_ID_ERRORS,
+  POSTS_BY_USER_ID_SUCCESS,
 
   POST_COUNT_BY_USER_ID_REQUEST,
   POST_COUNT_BY_USER_ID_ERRORS,
-  POST_COUNT_BY_USER_ID_SUCCESS
+  POST_COUNT_BY_USER_ID_SUCCESS,
+
+  CREATE_COMMENT_ON_VISIT_REQUEST,
+  CREATE_COMMENT_ON_VISIT_ERRORS,
+  CREATE_COMMENT_ON_VISIT_SUCCESS,
+
+  POST_LIKE_TOGGLE_ON_VISIT_REQUEST,
+  POST_LIKE_TOGGLE_ON_VISIT_ERRORS,
+  POST_LIKE_TOGGLE_ON_VISIT_SUCCESS
 } from './../constants/postActionTypes';
 
 
@@ -66,7 +74,6 @@ export const getCurrentUserPostCountAsync = () => {
       });
   }
 };
-
 
 
 const currentUserPostsRequest = () => ({
@@ -236,4 +243,89 @@ export const getPostCountByUserIdAsync = userId => {
         dispatch(postCountByUserIdErrors(err.response.data));
       })
   }
+};
+
+
+const postsByUserIdRequest = () => ({
+  type: POSTS_BY_USER_ID_REQUEST
+});
+
+const postsByUserIdErrors = errors => ({
+  type: POSTS_BY_USER_ID_ERRORS,
+  errors
+});
+
+const postsByUserIdSuccess = (posts, page) => ({
+  type: POSTS_BY_USER_ID_SUCCESS,
+  page,
+  posts
+});
+
+export const getPostsByUserIdAsync = (userId, pageNumber) => {
+  return dispatch => {
+    dispatch(postsByUserIdRequest());
+    return axios.get(`/api/posts/user/${userId}?pageNumber=${pageNumber}`)
+      .then(res => {
+        dispatch(postsByUserIdSuccess(res.data, pageNumber));
+      })
+      .catch(err => {
+        dispatch(postsByUserIdErrors(err.response.data));
+      });
+  }
+};
+
+const createCommentOnVisitRequest = () => ({
+  type: CREATE_COMMENT_ON_VISIT_REQUEST
+});
+
+const createCommentOnVisitErrors = errors => ({
+  type: CREATE_COMMENT_ON_VISIT_ERRORS,
+  errors
+});
+
+const createCommentOnVisitSuccess = (postId, newComment) => ({
+  type: CREATE_COMMENT_ON_VISIT_SUCCESS,
+  postId,
+  newComment
+});
+
+export const createCommentOnVisitAsync = (postId, commentData) => {
+  return dispatch => {
+    dispatch(createCommentOnVisitRequest());
+    return axios.post(`/api/posts/comment/${postId}`, commentData)
+      .then(res => {
+        dispatch(createCommentOnVisitSuccess(postId, res.data));
+      })
+      .catch(err => {
+        dispatch(createCommentOnVisitErrors(err.response.data));
+      });
+  };
+};
+
+
+const PostLikeToggleOnVisitRequest = () => ({
+  type: POST_LIKE_TOGGLE_ON_VISIT_REQUEST
+});
+
+const PostLikeToggleOnVisitErrors = errors => ({
+  type: POST_LIKE_TOGGLE_ON_VISIT_ERRORS,
+  errors
+});
+
+const PostLikeToggleOnVisitSuccess = updatedPost => ({
+  type: POST_LIKE_TOGGLE_ON_VISIT_SUCCESS,
+  updatedPost
+});
+
+export const postLikeToggleOnVisitAsync = postId => {
+  return dispatch => {
+    dispatch(PostLikeToggleOnVisitRequest());
+    return axios.post(`/api/posts/like/${postId}`)
+      .then(res => {
+        dispatch(PostLikeToggleOnVisitSuccess(res.data.updatedPost));
+      })
+      .catch(err => {
+        dispatch(PostLikeToggleOnVisitErrors(err.response.data));
+      });
+  };
 };

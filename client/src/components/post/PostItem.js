@@ -15,7 +15,7 @@ export default class PostItem extends Component {
     if (this.props.likes) {
       // find index of user id in likes array
       const userIndexInLike = this.props.likes.findIndex(like => {
-        return like.user === this.props.user;
+        return like.user === this.props.userId;
       });
       
       // if userId exists (index > -1) in array, set isLikedBySelf to true
@@ -92,9 +92,13 @@ export default class PostItem extends Component {
           <div className="post-tools-wrapper">
             <div className="post-time">{moment(this.props.date).fromNow()}</div>
             <div className="post-tools__menu">
-              <button className="btn-tool-menu__toggle" onClick={this.handleTogglePostItemMenu}>
-                <i className="fas fa-ellipsis-h"></i>
-              </button>
+              {
+                (this.props.userId === this.props.user) ? (
+                  <button className="btn-tool-menu__toggle" onClick={this.handleTogglePostItemMenu}>
+                    <i className="fas fa-ellipsis-h"></i>
+                  </button>
+                ) : null
+              }
               { 
                 this.state.showMenu ? (
                   <PostItemMenu 

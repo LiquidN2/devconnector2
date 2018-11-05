@@ -49,7 +49,7 @@ const postCountGet = (req, res) => {
   const errors = {};
   const userId = req.user._id;
 
-  Post.count({ user: userId })
+  Post.countDocuments({ user: userId })
     .then(numPosts => {
       if (!numPosts) {
         errors.postCount = 'no post'
@@ -209,7 +209,7 @@ const postCountByUserIdGet = (req, res) => {
   const errors = {};
   const { userId } = req.params;
 
-  Post.count({ user: userId })
+  Post.countDocuments({ user: userId })
     .then(numPosts => {
       if (!numPosts) {
         errors.postCount = 'no post'
@@ -218,7 +218,7 @@ const postCountByUserIdGet = (req, res) => {
       res.json({ numPosts });
     })
     .catch(err => res.status(400).send());
-}
+};
 
 module.exports = {
   postGet,

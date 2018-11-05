@@ -12,9 +12,10 @@ import {
 
 class PendingRequest extends Component {
   componentDidMount = () => {
-    if (!this.props.numPendingRequests) {
-      this.props.getPendingRequestsAsync();
-    }
+    this.props.getPendingRequestsAsync();
+    // if (!this.props.numPendingRequests) {
+    //   this.props.getPendingRequestsAsync();
+    // }
   };
 
   onApproveConnection = approvalData => {
@@ -37,20 +38,20 @@ class PendingRequest extends Component {
       return (
         <div className="row">
           <div className="connection-box">
-            <div className="connection-heading-container">
-              <h2 className="connection-heading u-margin-bottom-3rem">Pending Connection Requests</h2>
+            <div className="connection-heading-container connection-heading-container--with-separator u-padding-bottom-3rem">
+              <h2 className="profile-heading">
+                Pending Connection Requests
+              </h2>
               <span className="connection-count">
                 {
                   this.props.numPendingRequests > 1 ? (
                     `${this.props.numPendingRequests} requests`
                   ) : (
-                      `${this.props.numPendingRequests} request`
-                    )
+                    `${this.props.numPendingRequests} request`
+                  )
                 }
               </span>
             </div>
-
-            <hr className="connection-text-separater" />
 
             <div className="connection-item-container">
               {

@@ -6,6 +6,7 @@ import {
   CLEAR_LOGIN_ERRORS,
   CLEAR_REGISTER_ERRORS,
   SET_CURRENT_USER_ERRORS,
+  USER_LOGIN_ERROR,
   USER_LOGOUT
 } from './../constants/authActionTypes';
 
@@ -49,7 +50,7 @@ const initialState = {
 const errorReducer = (state = initialState, action) => {
   switch (action.type) {
 
-    case GET_LOGIN_ERRORS:
+    case USER_LOGIN_ERROR:
       return {
         ...state,
         login: action.errors
@@ -62,7 +63,7 @@ const errorReducer = (state = initialState, action) => {
       };
 
     case CLEAR_ERRORS:
-      return {};
+      return { ...initialState };
 
     case CLEAR_LOGIN_ERRORS:
       return {

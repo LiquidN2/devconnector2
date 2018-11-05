@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import setAuthToken from './../utils/setAuthToken';
+import history from '../routers/history';
 
 // load components
 import Header from './header/Header';
@@ -17,7 +18,13 @@ import {
   getConnectionStatusAsync, 
   getConnectionCountByUserIdAsync 
 } from '../actions/connectionActions';
-import { getPostCountByUserIdAsync } from '../actions/postActions';
+
+import { 
+  getPostCountByUserIdAsync,
+  getPostsByUserIdAsync,
+  postLikeToggleOnVisitAsync,
+  createCommentOnVisitAsync
+} from '../actions/postActions';
 
 let selfUserId, visitingUserId;
 
@@ -47,13 +54,45 @@ class PostByUserIdPage extends Component {
       /// get number of connections
       this.props.getConnectionCountByUserIdAsync(visitingUserId);
 
+      // get number of posts
       this.props.getPostCountByUserIdAsync(visitingUserId);
+
+      this.props.getPostsByUserIdAsync(visitingUserId, this.state.pageNumber);
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!this.props.visitingConnections.connected) {
+      history.push('/');
     }
   }
   
+  
   handleShowMorePosts = () => {
-
+    this.setState(prevState => ({
+      pageNumber: prevState.pageNumber + 1
+    }), () => {
+      // console.log('getting post page', this.state.pageNumber);
+      this.props.getPostsByUserIdAsync(visitingUserId, this.state.pageNumber);
+    });
   };
+
+  handleLikeToggle = postId => {
+    // console.log(postId);
+    this.props.postLikeToggleOnVisitAsync(postId);
+  };
+
+  handleCreateComment = (postId, commentText) => {
+    const { name, avatar } = this.props.user;
+    const commentData = {
+      name,
+      avatar,
+      text: commentText
+    };
+    // console.log(postId, commentData);
+    this.props.createCommentOnVisitAsync(postId, commentData);
+  };
+
 
   render() {
     selfUserId = this.props.user._id;
@@ -62,6 +101,7 @@ class PostByUserIdPage extends Component {
     const { numPosts } = this.props.visitingPosts;
     return (
       <React.Fragment>
+
         <Header visitingUserId={visitingUserId} />
         <section className="section-profile">
 
@@ -83,6 +123,23 @@ class PostByUserIdPage extends Component {
             </div>
 
             <div className="col-3-of-4">
+              {
+                this.props.visitingPosts.posts.map(post => {
+                  return (
+                    <div key={post._id} className="row">
+                      <PostItem
+                        userId={this.props.user._id}
+                        {...post}
+                        handleLikeToggle={this.handleLikeToggle} 
+                        // handleDeletePost={this.handleDeletePost}
+                        handleCreateComment={this.handleCreateComment}
+                      />
+                    </div>
+                  )
+                })
+              }
+
+
               <div className="row u-display-flex-row-center">
                 <button 
                   className="btn-link btn-link--color" 
@@ -115,6 +172,9 @@ const mapDispatchToProps = {
   getProfileByUserIdAsync,
   getConnectionStatusAsync,
   getConnectionCountByUserIdAsync,
-  getPostCountByUserIdAsync
+  getPostCountByUserIdAsync,
+  getPostsByUserIdAsync,
+  postLikeToggleOnVisitAsync,
+  createCommentOnVisitAsync
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PostByUserIdPage);
