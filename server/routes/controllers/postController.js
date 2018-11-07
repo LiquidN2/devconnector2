@@ -74,6 +74,8 @@ const postCreate = (req, res) => {
   if (req.body.text) newPostFields.text = req.body.text.trim();
   if (req.body.name) newPostFields.name = req.body.name.trim();
   if (req.body.avatar) newPostFields.avatar = req.body.avatar.trim();
+  if (req.body.imageName) newPostFields.imageName = req.body.imageName.trim();
+  if (req.body.imageUrl) newPostFields.imageUrl = req.body.imageUrl.trim();
 
   // create post
   const newPost = new Post(newPostFields);

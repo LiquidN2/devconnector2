@@ -6,9 +6,9 @@ import setAuthToken from './../utils/setAuthToken';
 // load components
 import Header from './header/Header';
 import AvatarBox from './profile/AvatarBox';
-import PostEntry from './post/PostEntry';
 import PostItem from './post/PostItem';
 import Loading from './Loading';
+import PostForm from './form/PostForm';
 
 // load actions
 import { setCurrentUserAsync } from './../actions/userActions';
@@ -16,11 +16,15 @@ import { getNumConnectionsAsync } from './../actions/connectionActions';
 import {
   getCurrentUserPostCountAsync, 
   getCurrentUserPostsAsync, 
-  createPostAsync, 
+  createPostAsync,
+  createPostWithFileAsync, 
   deletePostAsync, 
   postLikeToggleAsync,
   createCommentAsync 
 } from './../actions/postActions';
+
+import { fileSingleUploadAsync } from '../actions/fileActions';
+
 
 class PostPage extends Component {
   state = {
@@ -53,7 +57,23 @@ class PostPage extends Component {
     }
     this.props.createPostAsync(newPost);
     this.props.getCurrentUserPostCountAsync();
-    // console.log(newPost);
+  };
+
+  handleCreatePostWithFile = (fileBlob, fileName, postText) => {
+    const postData = {
+      name: this.props.user.name,
+      avatar: this.props.user.avatar,
+      text: postText,
+      imageName: fileName
+    };
+
+    // console.log(fileBlob, postData);
+    this.props.createPostWithFileAsync(fileBlob, postData);
+  };
+
+  handleFileUpload = file => {
+    console.log(typeof file);
+    this.props.fileSingleUploadAsync(file);
   };
 
   handleDeletePost = postId => {
@@ -86,6 +106,7 @@ class PostPage extends Component {
     this.props.createCommentAsync(postId, commentData);
   };
 
+
   render() {
     
     return (
@@ -106,13 +127,26 @@ class PostPage extends Component {
             </div>
 
             <div className="col-3-of-4">
-
               <div className="row">
-                <PostEntry 
-                  handleCreatePost={this.handleCreatePost} 
-                  postErrors={this.props.postErrors}
-                />
+                <div className="post-form-box">
+                  <PostForm 
+                    handleCreatePost={this.handleCreatePost} 
+                    handleFileUpload={this.handleFileUpload}
+                    handleCreatePostWithFile={this.handleCreatePostWithFile}
+                    postErrors={this.props.postErrors}
+                    isUpdatingPosts={this.props.isUpdatingPosts}
+                    isUploadingfile={this.props.isUploadingfile}
+                  />
+                </div>
               </div>
+
+              {
+                (this.props.isUpdatingPosts || this.props.isUploadingfile) ? (
+                  <div className="container u-margin-bottom-3rem">
+                    <Loading />
+                  </div>
+                ) : null
+              }
               
               {
                 this.props.posts.map(post => {
@@ -159,9 +193,11 @@ const mapStateToProps = state => ({
   profile: state.profile.profile,
   connections: state.connections,
   isFetchingPosts: state.posts.isFetching,
+  isUpdatingPosts: state.posts.isUpdating,
   postErrors: state.errors.post,
   posts: state.posts.posts,
-  numPosts: state.posts.numPosts
+  numPosts: state.posts.numPosts,
+  isUploadingfile: state.file.isUploading
 });
 
 const mapDispatchToProps = {
@@ -172,7 +208,9 @@ const mapDispatchToProps = {
   createPostAsync,
   deletePostAsync,
   postLikeToggleAsync,
-  createCommentAsync
+  createCommentAsync,
+  fileSingleUploadAsync,
+  createPostWithFileAsync
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostPage);

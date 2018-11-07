@@ -14,19 +14,21 @@ import connectionReducer from './connectionsReducer';
 import visitingProfileReducer from './visitingProfileReducer';
 import visitingConnectionsReducer from './visitingConnectionsReducer';
 import visitingPostsReducer from './visitingPostsReducer';
+import fileReducer from './fileReducer';
 
 
 const rootReducer = combineReducers({
-    register: registerReducer,
-    auth: authReducer,
-    errors: errorReducer,
-    user: userReducer,
-    profile: profileReducer,
-    posts: postReducer,
-    connections: connectionReducer,
-    visitingProfile: visitingProfileReducer,
-    visitingConnections: visitingConnectionsReducer,
-    visitingPosts: visitingPostsReducer
+  register: registerReducer,
+  auth: authReducer,
+  errors: errorReducer,
+  user: userReducer,
+  profile: profileReducer,
+  posts: postReducer,
+  file: fileReducer,
+  connections: connectionReducer,
+  visitingProfile: visitingProfileReducer,
+  visitingConnections: visitingConnectionsReducer,
+  visitingPosts: visitingPostsReducer
 });
 
 export default rootReducer;

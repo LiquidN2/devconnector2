@@ -8,16 +8,24 @@ const postSchema = new Schema({
     ref: 'User'
   },
 
-  text: {
-    type: String,
-    required: true
-  },
-
   name: {
     type: String
   },
 
   avatar: {
+    type: String
+  },
+
+  text: {
+    type: String,
+    required: true
+  },
+
+  imageName: {
+    type: String
+  },
+
+  imageUrl: {
     type: String
   },
 

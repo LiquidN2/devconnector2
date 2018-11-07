@@ -7,6 +7,9 @@ const User = require('./../../models/User');
 const validateRegisterInput = require('./../../validation/register');
 const validateLoginInput = require('./../../validation/login');
 
+// Load Firebase Admin SDK
+const { createCustomFireBaseToken } = require('../../firebase/firebase');
+
 const userRegister = (req, res) => {
   let { errors, isValid } = validateRegisterInput(req.body);
 
@@ -59,16 +62,33 @@ const userLogin = (req, res) => {
   const { email, password } = req.body;
   let foundUser;
 
+  // User.findByCredential(email, password)
+  //   .then(user => {
+  //     foundUser = user;
+  //     return user.generateToken();
+  //   })
+  //   .then(token => {
+  //     res.status(200).send({
+  //       success: true,
+  //       token: `Bearer ${token}`
+  //     });
+  //   })
+  //   .catch(err => res.status(400).send(err));
+
   User.findByCredential(email, password)
     .then(user => {
-      // res.status(200).send(user);
       foundUser = user;
-      return user.generateToken();
+      const userId = user._id.toHexString();
+      return Promise.all([
+        user.generateToken(),
+        createCustomFireBaseToken(userId)
+      ]);
     })
-    .then(token => {
+    .then(([token, firebaseToken]) => {
       res.status(200).send({
         success: true,
-        token: `Bearer ${token}`
+        token: `Bearer ${token}`,
+        firebaseToken
       });
     })
     .catch(err => res.status(400).send(err));

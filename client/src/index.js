@@ -9,18 +9,32 @@ import * as serviceWorker from './serviceWorker';
 
 import store from './store';
 
+import { firebase } from './firebase/firebase'
+
 import moment from 'moment';
 import 'moment/locale/en-au';
 moment.locale('en-au');
 
-
-// console.log(typeof moment('Oct2000', 'MMMYYYY').valueOf())
-// console.log(moment(970318800000).format())
+// signin firebase
+let firebaseAuthenticated = false;
+const firebaseToken = localStorage.getItem('firebaseToken');
+if (!firebaseAuthenticated && firebaseToken) {
+  firebase.auth().signInWithCustomToken(firebaseToken)
+    .then(() => {
+      firebaseAuthenticated = true;
+    })
+    .catch(error => {
+    // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+}
 
 const JSX = (
-    <Provider store={store}>
-        <AppRouter />
-    </Provider>
+  <Provider store={store}>
+    <AppRouter />
+  </Provider>
 );
 
 
