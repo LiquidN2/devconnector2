@@ -29,6 +29,19 @@ const postSchema = new Schema({
     type: String
   },
 
+  imageIsResized: {
+    type: Boolean,
+    default: false
+  },
+
+  resizedImageName: {
+    type: String
+  },
+
+  resizedImageUrl: {
+    type: String
+  },
+
   date: {
     type: Date,
     default: Date.now

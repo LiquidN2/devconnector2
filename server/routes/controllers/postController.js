@@ -25,7 +25,7 @@ const postGet = (req, res) => {
 
       let postArr = [];
       posts.forEach(post => {
-        const { _id, user, name, avatar, text, date, likes, comments } = post;
+        const { _id, user, name, avatar, text, date, likes, comments, imageName, imageUrl, imageIsResized, resizedImageName, resizedImageUrl } = post;
         postArr.push({
           _id,
           user,
@@ -35,6 +35,11 @@ const postGet = (req, res) => {
           likes,
           comments,
           date,
+          imageName, 
+          imageUrl,
+          imageIsResized, 
+          resizedImageName, 
+          resizedImageUrl,
           numLikes: likes.length,
           numComments: comments.length
         });
@@ -124,6 +129,13 @@ const postByIdUpdate = (req, res) => {
   if (req.body.text) updatedPost.text = req.body.text.trim();
   if (req.body.name) updatedPost.name = req.body.name.trim();
   if (req.body.avatar) updatedPost.avatar = req.body.avatar.trim();
+  if (req.body.imageName) updatedPost.imageName = req.body.imageName.trim();
+  if (req.body.imageUrl) {
+    updatedPost.imageUrl = req.body.imageUrl.trim();
+    updatedPost.imageIsResized = false;
+    updatedPost.resizedImageName = '';
+    updatedPost.resizedImageUrl = '';
+  }
 
   const conditions = {
     user: userId,
@@ -144,8 +156,40 @@ const postByIdUpdate = (req, res) => {
       return res.status(200).json(post);
     })
     .catch(err => res.status(400).send());
-
 };
+
+
+const postResizedImgUpdate = (req, res) => {
+
+  const userId = req.user._id;
+  const { postId } = req.params;
+
+  const updatedPost = {};
+
+  if (req.body.imageIsResized) updatedPost.imageIsResized = true ;
+  if (req.body.resizedImageName) updatedPost.resizedImageName = req.body.resizedImageName.trim();
+  if (req.body.resizedImageUrl) updatedPost.resizedImageUrl = req.body.resizedImageUrl.trim();
+  
+  const conditions = {
+    user: userId,
+    _id: postId
+  }
+
+  const update = { $set: updatedPost };
+
+  const options = { new: true };
+
+  Post.findOneAndUpdate(conditions, update, options)
+    .then(post => {
+      if (!post) {
+        errors.nopost = 'No post found';
+        return res.status(404).json(errors);
+      }
+
+      return res.status(200).json(post);
+    })
+    .catch(err => res.status(400).send());
+}
 
 const postByIdGet = (req, res) => {
   const errors = {};
@@ -187,7 +231,7 @@ const postByUserIdGet = (req, res) => {
 
       let postArr = [];
       posts.forEach(post => {
-        const { _id, user, name, avatar, text, date, likes, comments } = post;
+        const { _id, user, name, avatar, text, date, likes, comments, imageName, imageUrl, imageIsResized, resizedImageName, resizedImageUrl } = post;
         postArr.push({
           _id,
           user,
@@ -197,6 +241,11 @@ const postByUserIdGet = (req, res) => {
           likes,
           comments,
           date,
+          imageName, 
+          imageUrl,
+          imageIsResized, 
+          resizedImageName, 
+          resizedImageUrl,
           numLikes: likes.length,
           numComments: comments.length
         });
@@ -230,5 +279,6 @@ module.exports = {
   postByIdUpdate,
   postByIdGet,
   postByUserIdGet,
-  postCountByUserIdGet
+  postCountByUserIdGet,
+  postResizedImgUpdate
 };

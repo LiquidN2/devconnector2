@@ -1,5 +1,8 @@
 import axios from 'axios';
 import storage, { firebase } from '../firebase/firebase'; 
+// import firebase from '../firebase/firebase';
+// import * as storage from 'firebase/storage';
+import uuidv1 from 'uuid/v1';
 
 import { 
   CURRENT_USER_POSTS_REQUEST,
@@ -40,13 +43,21 @@ import {
 
   POST_LIKE_TOGGLE_ON_VISIT_REQUEST,
   POST_LIKE_TOGGLE_ON_VISIT_ERRORS,
-  POST_LIKE_TOGGLE_ON_VISIT_SUCCESS
+  POST_LIKE_TOGGLE_ON_VISIT_SUCCESS,
+
+  // POST_RESIZED_IMG_URL_UPDATE_REQUEST,
+  // POST_RESIZED_IMG_URL_UPDATE_ERRORS,
+  // POST_RESIZED_IMG_URL_UPDATE_SUCCESS
 } from './../constants/postActionTypes';
 
 import {
   FILE_SINGLE_UPLOAD_REQUEST,
   FILE_SINGLE_UPLOAD_ERRORS,
-  FILE_SINGLE_UPLOAD_SUCCESS
+  FILE_SINGLE_UPLOAD_SUCCESS,
+
+  // FILE_GET_DOWNLOAD_URL_REQUEST,
+  // FILE_GET_DOWNLOAD_URL_ERRORS,
+  // FILE_GET_DOWNLOAD_URL_SUCCESS
 } from '../constants/fileActionTypes';
 
 
@@ -358,13 +369,18 @@ const metadata = {
 };
 
 const storageRef = storage.ref();
+const imagesRef = storageRef.child('images');
 
 export const createPostWithFileAsync = (file, postData) => {
   return dispatch => {
     dispatch(fileSingleUploadRequest());
 
-    // Upload file and metadata to the object 'images/mountains.jpg'
-    const uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+    const { userId } = postData;
+    const newFileName = `${uuidv1()}.jpg`;
+    const userIdRef = imagesRef.child(`${userId}`);
+    // Upload file and metadata to the object 'images/'
+    // const uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+    const uploadTask = userIdRef.child(newFileName).put(file, metadata);
     
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -414,6 +430,7 @@ export const createPostWithFileAsync = (file, postData) => {
 
             const postDataWithFileLink = {
               ...postData,
+              imageName: newFileName,
               imageUrl: downloadURL
             };
 

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import storage from '../../firebase/firebase';
+// import firebase from 'firebase/app';
+// import * as storage from 'firebase/storage';
+import axios from 'axios';
 
 import Comments from './Comments';
 import PostItemMenu from './PostItemMenu';
@@ -8,7 +12,8 @@ export default class PostItem extends Component {
   state = {
     showComments: false,
     showMenu: false,
-    isLikedBySelf: false
+    isLikedBySelf: false,
+    resizedImageUrl: ''
   };
 
   componentDidMount = () => {
@@ -24,6 +29,30 @@ export default class PostItem extends Component {
           isLikedBySelf: true
         }))
       }
+    }
+
+    const { _id: postId, imageUrl, imageIsResized, userId, imageName } = this.props;
+    // const { setState } = this;
+
+    if (imageUrl && !imageIsResized) {
+      // get download url of resized image from firebase
+      const storageRef = storage.ref(`resized-images/${userId}/resized-${imageName}`);
+      storageRef.getDownloadURL()
+        .then(downloadUrl => {
+          this.setState(prevState => ({
+            resizedImagedUrl: downloadUrl
+          }));
+          
+          // update download url of resized image in DB
+          axios.patch(`/api/posts/resizedimgupdate/${postId}`, {
+            imageIsResized: true,
+            resizedImageName: `resized-${imageName}`,
+            resizedImageUrl: downloadUrl
+          })
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
   
@@ -114,6 +143,35 @@ export default class PostItem extends Component {
 
         <div className="post-content">
           <p className="post-content__text">{this.props.text}</p>
+          {
+            this.props.resizedImageUrl ? (
+              <img 
+                src={this.props.resizedImageUrl} 
+                alt={this.props.imageName}
+                className="post-content__photo" 
+              />
+            ) : null 
+          }
+
+          {
+            (!this.props.resizedImageUrl && this.state.resizedImageUrl) ? (
+              <img 
+                src={this.state.resizedImageUrl} 
+                alt={this.props.imageName}
+                className="post-content__photo" 
+              />
+            ) : null 
+          }
+
+          {
+            (!this.props.resizedImageUrl && !this.state.resizedImageUrl && this.props.imageUrl) ? (
+              <img 
+                src={this.props.imageUrl} 
+                alt={this.props.imageName}
+                className="post-content__photo" 
+              />
+            ) : null 
+          }
         </div>
 
         <div className="post-interactions">

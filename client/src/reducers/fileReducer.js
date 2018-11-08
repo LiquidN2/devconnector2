@@ -3,13 +3,18 @@ import { USER_LOGOUT } from '../constants/authActionTypes';
 import {
   FILE_SINGLE_UPLOAD_REQUEST,
   FILE_SINGLE_UPLOAD_ERRORS,
-  FILE_SINGLE_UPLOAD_SUCCESS
+  FILE_SINGLE_UPLOAD_SUCCESS,
+
+  FILE_GET_DOWNLOAD_URL_REQUEST,
+  FILE_GET_DOWNLOAD_URL_ERRORS,
+  FILE_GET_DOWNLOAD_URL_SUCCESS
 } from '../constants/fileActionTypes';
 
 const initialState = {
   isUploading: false,
   uploadProgress: 0,
-  downloadURL: ''
+  isFetchingFiles: false,
+  downloadUrls: []
 };
 
 const fileReducer = (state = initialState, action) => {
@@ -30,7 +35,35 @@ const fileReducer = (state = initialState, action) => {
       return {
         ...state,
         isUploading: false,
-        downloadURL: action.downloadURL
+        downloadURLs: [
+          ...state.downloadUrls, 
+          action.downloadUrl
+        ]
+      }
+
+    case FILE_GET_DOWNLOAD_URL_REQUEST:
+      return {
+        ...state,
+        isFetchingFiles: true
+      }
+    
+    case FILE_GET_DOWNLOAD_URL_ERRORS:
+      return {
+        ...state,
+        isFetchingFiles: false
+      }
+    
+    case FILE_GET_DOWNLOAD_URL_SUCCESS:
+      return {
+        ...state,
+        isFetchingFiles: false,
+        downloadUrls: [
+          ...state.downloadUrls,
+          {
+            postId: action.postId,
+            downloadUrl: action.downloadUrl
+          }
+        ]
       }
 
     case USER_LOGOUT:

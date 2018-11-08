@@ -61,6 +61,7 @@ class PostPage extends Component {
 
   handleCreatePostWithFile = (fileBlob, fileName, postText) => {
     const postData = {
+      userId: this.props.user._id,
       name: this.props.user.name,
       avatar: this.props.user.avatar,
       text: postText,
@@ -141,7 +142,7 @@ class PostPage extends Component {
               </div>
 
               {
-                (this.props.isUpdatingPosts || this.props.isUploadingfile) ? (
+                this.props.isUploadingfile ? (
                   <div className="container u-margin-bottom-3rem">
                     <Loading />
                   </div>
@@ -197,7 +198,7 @@ const mapStateToProps = state => ({
   postErrors: state.errors.post,
   posts: state.posts.posts,
   numPosts: state.posts.numPosts,
-  isUploadingfile: state.file.isUploading
+  isUploadingfile: state.files.isUploading
 });
 
 const mapDispatchToProps = {

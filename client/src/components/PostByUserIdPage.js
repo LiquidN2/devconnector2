@@ -7,7 +7,6 @@ import history from '../routers/history';
 // load components
 import Header from './header/Header';
 import AvatarBox from './profile/AvatarBox';
-import PostEntry from './post/PostEntry';
 import PostItem from './post/PostItem';
 import Loading from './Loading';
 
@@ -26,7 +25,8 @@ import {
   createCommentOnVisitAsync
 } from '../actions/postActions';
 
-let selfUserId, visitingUserId;
+let selfUserId;
+let visitingUserId;
 
 class PostByUserIdPage extends Component {
   state = {
@@ -139,6 +139,13 @@ class PostByUserIdPage extends Component {
                 })
               }
 
+              {
+                this.props.isFetchingVisitingPosts ? (
+                  <div className="container u-margin-bottom-3rem">
+                    <Loading />
+                  </div>
+                ) : null
+              }
 
               <div className="row u-display-flex-row-center">
                 <button 
@@ -164,7 +171,8 @@ const mapStateToProps = state => ({
   isFetchingVisitingProfile: state.visitingProfile.isFetching,
   visitingProfile: state.visitingProfile.profile,
   visitingConnections: state.visitingConnections,
-  visitingPosts: state.visitingPosts
+  visitingPosts: state.visitingPosts,
+  isFetchingVisitingPosts: state.visitingPosts.isFetching
 });
 
 const mapDispatchToProps = {

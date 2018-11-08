@@ -21,7 +21,8 @@
     "react-script": "2.0.5",
     "react-scripts": "2.1.1",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

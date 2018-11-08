@@ -118,6 +118,7 @@ export default class PostForm extends Component {
     } else {
       this.props.handleCreatePostWithFile(fileBlob, fileName, postText);
       this.setState(() => ({
+        post: '',
         file: null,
         fileBlob: null,
         fileName: ''
@@ -145,7 +146,7 @@ export default class PostForm extends Component {
           fieldName="post"
           fieldValue={this.state.post}
           onChange={this.handleInputChange}
-          isDisabled={this.props.isUploadingFile || this.props.isUpdatingPosts}
+          isDisabled={this.props.isUploadingFile}
           placeholder="What's on your mind?"
           autoFocus
         />

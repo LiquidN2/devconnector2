@@ -24,7 +24,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   profile: profileReducer,
   posts: postReducer,
-  file: fileReducer,
+  files: fileReducer,
   connections: connectionReducer,
   visitingProfile: visitingProfileReducer,
   visitingConnections: visitingConnectionsReducer,

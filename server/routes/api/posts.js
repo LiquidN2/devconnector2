@@ -76,6 +76,16 @@ router.patch(
   postController.postByIdUpdate
 );
 
+// @route   PATCH api/posts/resizedimgupdate/:postId
+// @desc    Update post by id
+// @access  Private
+router.patch(
+  '/resizedimgupdate/:postId',
+  passport.authenticate('jwt', { session: false }),
+  postController.postResizedImgUpdate
+);
+
+
 // @route   GET api/posts/:postId
 // @desc    Get post by id
 // @access  Private

@@ -80,16 +80,16 @@ const visitingPostsReducer = (state = initialState, action) => {
         }
       }
     
-    case POST_COUNT_BY_USER_ID_REQUEST:
     case CREATE_COMMENT_ON_VISIT_REQUEST:
+    case POST_LIKE_TOGGLE_ON_VISIT_REQUEST:
       return {
         ...state,
         isUpdating: true,
         isUpdated: false
       }
 
-    case POST_COUNT_BY_USER_ID_ERRORS:
     case CREATE_COMMENT_ON_VISIT_ERRORS:
+    case POST_LIKE_TOGGLE_ON_VISIT_ERRORS:
       return {
         ...state,
         isUpdating: false,

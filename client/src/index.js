@@ -10,6 +10,8 @@ import * as serviceWorker from './serviceWorker';
 import store from './store';
 
 import { firebase } from './firebase/firebase'
+// import firebase from './firebase/firebase';
+// import * as auth from 'firebase/auth';
 
 import moment from 'moment';
 import 'moment/locale/en-au';
@@ -20,6 +22,7 @@ let firebaseAuthenticated = false;
 const firebaseToken = localStorage.getItem('firebaseToken');
 if (!firebaseAuthenticated && firebaseToken) {
   firebase.auth().signInWithCustomToken(firebaseToken)
+  // firebase.auth().signInWithCustomToken(firebaseToken)
     .then(() => {
       firebaseAuthenticated = true;
     })
@@ -28,6 +31,7 @@ if (!firebaseAuthenticated && firebaseToken) {
       var errorCode = error.code;
       var errorMessage = error.message;
       // ...
+      console.log('firebase auth error', errorCode, errorMessage);
     });
 }
 

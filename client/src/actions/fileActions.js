@@ -1,9 +1,15 @@
 import storage, { firebase } from '../firebase/firebase'; 
+// import firebase from 'firebase/app';
+// import * as storage from 'firebase/storage';
 
 import {
   FILE_SINGLE_UPLOAD_REQUEST,
   FILE_SINGLE_UPLOAD_ERRORS,
-  FILE_SINGLE_UPLOAD_SUCCESS
+  FILE_SINGLE_UPLOAD_SUCCESS,
+
+  FILE_GET_DOWNLOAD_URL_REQUEST,
+  FILE_GET_DOWNLOAD_URL_ERRORS,
+  FILE_GET_DOWNLOAD_URL_SUCCESS
 } from '../constants/fileActionTypes';
 
 
@@ -85,3 +91,31 @@ export const fileSingleUploadAsync = file => {
   }
 }
 
+
+const fileGetDownloadUrlRequest = () => ({
+  type: FILE_GET_DOWNLOAD_URL_REQUEST
+});
+
+const fileGetDownloadUrlErrors = errors => ({
+  type: FILE_GET_DOWNLOAD_URL_ERRORS,
+  errors
+});
+
+const fileGetDownloadUrlSuccess = (postId, downloadUrl) => ({
+  type: FILE_GET_DOWNLOAD_URL_SUCCESS,
+  postId,
+  downloadUrl
+});
+
+export const fileGetDownloadUrlAsync = (userId, postId, fileName) => dispatch => {
+  dispatch(fileGetDownloadUrlRequest());
+
+  const storageRef = storage.ref(`resized-images/${userId}/resized-${fileName}`);
+  storageRef.getDownloadURL()
+    .then(function(downloadUrl) {
+      dispatch(fileGetDownloadUrlSuccess(postId, downloadUrl));
+    })
+    .catch(err => {
+      dispatch(fileGetDownloadUrlErrors(err));
+    });
+}

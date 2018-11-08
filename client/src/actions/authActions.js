@@ -3,7 +3,8 @@ import jwt_decode from 'jwt-decode';
 
 import history from './../routers/history';
 import setAuthToken from './../utils/setAuthToken';
-import { firebase } from '../firebase/firebase';
+import firebase from '../firebase/firebase';
+// import firebase from 'firebase/app';
 
 import {
   CLEAR_LOGIN_ERRORS,
