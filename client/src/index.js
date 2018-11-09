@@ -18,22 +18,16 @@ import 'moment/locale/en-au';
 moment.locale('en-au');
 
 // signin firebase
-let firebaseAuthenticated = false;
-const firebaseToken = localStorage.getItem('firebaseToken');
-if (!firebaseAuthenticated && firebaseToken) {
-  firebase.auth().signInWithCustomToken(firebaseToken)
-  // firebase.auth().signInWithCustomToken(firebaseToken)
-    .then(() => {
-      firebaseAuthenticated = true;
-    })
-    .catch(error => {
-    // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-      console.log('firebase auth error', errorCode, errorMessage);
-    });
-}
+firebase.auth().onIdTokenChanged(user => {
+  if (user) {
+    // User is signed in or token was refreshed.
+    console.log('authenticated with firebase');
+  } else {
+    console.log('not signed in firebase');
+  }
+});
+
+
 
 const JSX = (
   <Provider store={store}>

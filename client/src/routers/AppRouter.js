@@ -16,7 +16,7 @@ import ProfileEditPage from '../components/ProfileEditPage';
 import ExperienceEditPage from '../components/ExperienceEditPage';
 import EducationEditPage from '../components/EducationEditPage';
 import ProfileByUserIdPage from '../components/ProfileByUserIdPage';
-
+import SearchPage from '../components/SearchPage';
 
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
@@ -41,6 +41,8 @@ const AppRouter = () => {
         <PrivateRoute path="/posts" component={PostPage} />
         
         <PrivateRoute path="/connections" component={ConnectionPage} />
+
+        <PrivateRoute path="/search" component={SearchPage} />
       </Switch>
     </Router>
   )

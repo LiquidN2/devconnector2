@@ -11,7 +11,7 @@ const router = express.Router();
 // @route   GET api/posts/test
 // @desc    Test posts route
 // @access  Public
-router.get('/test', (req, res) => res.json({ msg: "Posts works" }));
+router.get('/test', (req, res) => res.json({ msg: "Posts works!" }));
 
 // @route   GET api/posts
 // @desc    Get posts (maximum 5 post per page)

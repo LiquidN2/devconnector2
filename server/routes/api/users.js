@@ -24,7 +24,11 @@ router.post('/login', userController.userLogin);
 // @route   GET api/users/current
 // @desc    Return current user
 // @access  Private
-router.get('/current', passport.authenticate('jwt', { session: false }), userController.userCurrentGet);
+router.get(
+  '/current', 
+  passport.authenticate('jwt', { session: false }), 
+  userController.userCurrentGet
+);
 
 
 module.exports = router;
