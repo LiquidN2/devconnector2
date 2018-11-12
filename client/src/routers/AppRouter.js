@@ -25,7 +25,7 @@ const AppRouter = () => {
   return (
     <Router history={history}>
       <Switch>
-        <PrivateRoute exact path="/" component={ProfilePage} />
+        <PrivateRoute exact path="/" component={PostPage} />
 
         <PublicRoute path="/register" component={RegisterPage} />
         <PublicRoute path="/login" component={LoginPage} />

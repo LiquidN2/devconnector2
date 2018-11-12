@@ -10,11 +10,13 @@ import userReducer from './userReducer';
 import profileReducer from './profileReducer';
 import postReducer from './postReducer';
 import connectionReducer from './connectionsReducer';
+import fileReducer from './fileReducer';
+import searchReducer from './searchReducer';
+import filterReducer from './filterReducer';
 
 import visitingProfileReducer from './visitingProfileReducer';
 import visitingConnectionsReducer from './visitingConnectionsReducer';
 import visitingPostsReducer from './visitingPostsReducer';
-import fileReducer from './fileReducer';
 
 
 const rootReducer = combineReducers({
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
   user: userReducer,
   profile: profileReducer,
   posts: postReducer,
+  search: searchReducer,
+  filters: filterReducer,
   files: fileReducer,
   connections: connectionReducer,
   visitingProfile: visitingProfileReducer,

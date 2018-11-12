@@ -10,8 +10,8 @@ const searchController = require('../controllers/searchController');
 // @access  Public
 router.get('/test', (req, res) => res.json({msg: "Search works"}));
 
-// @route   GET api/search/test
-// @desc    Test search route
+// @route   GET api/search
+// @desc    Get general search
 // @access  Public
 router.get(
   '/',

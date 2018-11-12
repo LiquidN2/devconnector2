@@ -10,10 +10,10 @@ const validateQueryInput = require('../../validation/query');
 // Load utils
 const { removeDuplicatesById, removeDuplicatesByProp } = require('../../utils/removeDuplicates');
 
-const findProfileByName = (nameText, pageNumberInput = 0) => {
+const findProfileByName = (nameText, pageNumberInput = 0, nPerPage) => {
   // pagination
   const pageNumber = pageNumberInput ? pageNumberInput : 0;
-  const nPerPage = 10;
+  // const nPerPage = 10;
 
   return User.find({ "name": { $regex: nameText, $options: 'i' }})
   .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
@@ -38,7 +38,6 @@ const searchGeneral = (req, res) => {
     return res.status(400).json(errors);
   }
   
-
   // const nameQuery = User.find({ "name": { $regex: query, $options: 'i' }})
   //   .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
   //   .limit(nPerPage)
@@ -54,7 +53,7 @@ const searchGeneral = (req, res) => {
   const pageNumber = req.query.pageNumber ? req.query.pageNumber : 0;
   const nPerPage = 10;
   
-  const profileByNameQuery = findProfileByName(query);
+  const profileByNameQuery = findProfileByName(query, pageNumber, nPerPage);
 
   // const profileByHandleQuery = Profile.find({ "handle": { $regex: query, $options: 'i' }})
   //   .skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0)
@@ -85,12 +84,7 @@ const searchGeneral = (req, res) => {
       ...profileByNames,
       ...profiles      
     ];
-
-    // const uniqueResults = removeDuplicatesByProp(allResults, "name");
     const uniqueResults = removeDuplicatesById(allResults);
-
-    console.log(allResults);
-
     res.json(uniqueResults);
   }).catch(err => res.status(400).send(err));
 };

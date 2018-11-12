@@ -13,7 +13,7 @@ const PublicRoute = props => {
     // if is authenticated, redirect to a Private route
     if (auth.isAuthenticated) {
       return (
-        <Redirect to="/profile" />
+        <Redirect to="/" />
       );
     } else {
       // render public component

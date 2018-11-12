@@ -20,6 +20,19 @@ export default class NavBar extends Component {
           urlLabel: 'Education'
         }];
         break;
+      
+      case '/search':
+        links = [{
+          urlValue: '/search',
+          urlLabel: 'All'
+        }, {
+          urlValue: '/search/people',
+          urlLabel: 'People'
+        }, {
+          urlValue: '/search/company',
+          urlLabel: 'Company'
+        }];
+        break;
 
       default:
         links = [{
