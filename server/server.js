@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const path = require('path');
+const http = require('http');
+const socketIO = require('socket.io');
 
 // Load routes
 const users = require('./routes/api/users');
@@ -14,12 +16,17 @@ const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
 const connections = require('./routes/api/connections');
 const search = require('./routes/api/search');
+const messages = require('./routes/api/messages');
 
 // Load passport auth strategy
 const configurePassport = require('./../config/passport');
 
-const app = express();
+// Load socket IO controller
+const socketIOController = require('./socketio/socketIOController');
 
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 // Use bodyParser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,6 +54,7 @@ app.use('/api/profile', profile);
 app.use('/api/posts', posts);
 app.use('/api/connections', connections);
 app.use('/api/search', search);
+app.use('/api/messages', messages);
 
 
 // server static assets if in production
@@ -60,8 +68,10 @@ if (env === 'production') {
 	});
 }
 
+io.on('connection', socketIOController);
+
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+server.listen(port, () => {
 	console.log(`**** ${env.toUpperCase()} ****`);
 	console.log(`server running at localhost:${port}`);
 	// console.log(process.env.MONGODB_URI);

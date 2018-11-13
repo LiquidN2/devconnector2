@@ -163,6 +163,7 @@ class EducationEditPage extends Component {
           shouldCloseOnOverlayClick={true}
           shouldCloseOnEsc={true}
           className="modal"
+          overlayClassName="modal__overlay"
           contentLabel="Education Form Modal"
         >
           <EducationModalForm

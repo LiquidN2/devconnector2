@@ -159,6 +159,7 @@ class ExperienceEditPage extends Component {
           shouldCloseOnOverlayClick={true}
           shouldCloseOnEsc={true}
           className="modal"
+          overlayClassName="modal__overlay"
           contentLabel="Experience Form Modal"
         >
           <ExperienceModalForm

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import setAuthToken from './../utils/setAuthToken';
+
 // load components
 import Header from './header/Header';
 import ProfileBase from './profile/ProfileBase';
@@ -11,8 +13,7 @@ import ProfileEducation from './profile/ProfileEducation';
 import ProfileSkills from './profile/ProfileSkills';
 import Loading from './Loading';
 
-import setAuthToken from './../utils/setAuthToken';
-
+// Load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
 import { getNumConnectionsAsync } from '../actions/connectionActions';

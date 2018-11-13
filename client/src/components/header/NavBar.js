@@ -34,6 +34,16 @@ export default class NavBar extends Component {
         }];
         break;
 
+      case '/messages':
+        links = [{
+          urlValue: '/messages',
+          urlLabel: 'All Messages'
+        }, {
+          urlValue: '/messages/unread',
+          urlLabel: 'Unread Messages'
+        }];
+        break;
+
       default:
         links = [{
           urlValue: this.props.visitingUserId ? `/profile/user/${this.props.visitingUserId}` : '/profile',
