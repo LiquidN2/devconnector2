@@ -56,7 +56,7 @@ class MessagePage extends Component {
           <div className="container row">
             <div className="message-container u-margin-top-3rem">
               <MessageHistory />
-              <MessageConversation />
+              <MessageConversation conversationId={this.props.user._id}/>
               <MessageSender />
             </div>
           </div>

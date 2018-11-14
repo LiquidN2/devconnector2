@@ -17,6 +17,7 @@ const posts = require('./routes/api/posts');
 const connections = require('./routes/api/connections');
 const search = require('./routes/api/search');
 const messages = require('./routes/api/messages');
+const rooms = require('./routes/api/rooms');
 
 // Load passport auth strategy
 const configurePassport = require('./../config/passport');
@@ -49,12 +50,13 @@ app.use(passport.initialize());
 configurePassport(passport);
 
 // API routes
-app.use('/api/users', users);
-app.use('/api/profile', profile);
-app.use('/api/posts', posts);
 app.use('/api/connections', connections);
-app.use('/api/search', search);
 app.use('/api/messages', messages);
+app.use('/api/posts', posts);
+app.use('/api/profile', profile);
+app.use('/api/rooms', rooms);
+app.use('/api/search', search);
+app.use('/api/users', users);
 
 
 // server static assets if in production
@@ -68,7 +70,9 @@ if (env === 'production') {
 	});
 }
 
-io.on('connection', socketIOController);
+io.on('connection', socket => {
+	socketIOController(socket, io);
+});
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

@@ -6,9 +6,8 @@ export default class MessageOutgoingItem extends Component {
       <div className="message-conversation-outgoing">
           <div className="message-conversation-outgoing__content">
           <p className="message-conversation-outgoing__text">
-            Lorem ipsum dolor sit amet, id fugit molestiae nec, ad mea quodsi admodum atomorum, sit ad natum
-            facilisis. Qui no illum suavitate, ne mel oratio latine voluptatibus, suas aliquando ad vis. Ut
-            virtute.
+            {/* Lorem ipsum dolor sit amet. */}
+            {this.props.message}
           </p>
           <p className="message-conversation-outgoing__time">
             30 minutes ago

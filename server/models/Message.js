@@ -3,25 +3,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
-  from: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User' // works like joining tables
   },
 
-  to: {
-    type: Schema.Types.ObjectId,
-    ref: 'User' // works like joining tables
-  },
-
-  message: {
+  text: {
     type: String
   },
 
   date: {
-    type: Date
+    type: Date,
+    default: Date.now
+  },
+
+  roomId: {
+    type: Schema.Types.ObjectId
   }
 });
 
 const Message = mongoose.model('Message', messageSchema);
 
-module.exports = Profile;
+module.exports = Message;
