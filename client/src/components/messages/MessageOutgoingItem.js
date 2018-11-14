@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 export default class MessageOutgoingItem extends Component {
   render() {
@@ -6,11 +7,10 @@ export default class MessageOutgoingItem extends Component {
       <div className="message-conversation-outgoing">
           <div className="message-conversation-outgoing__content">
           <p className="message-conversation-outgoing__text">
-            {/* Lorem ipsum dolor sit amet. */}
-            {this.props.message}
+            {this.props.text}
           </p>
           <p className="message-conversation-outgoing__time">
-            30 minutes ago
+            {moment(this.props.date).fromNow()}
           </p>
         </div>
       </div>

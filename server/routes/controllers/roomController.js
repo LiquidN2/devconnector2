@@ -41,17 +41,17 @@ const roomGet = (req, res) => {
 
   let queryCondition;
 
-  if(targetUserId) {
+  if(!targetUserId) {
+    queryCondition = {
+      roomType,
+      "members.user": userId
+    };
+  } else {
     queryCondition = {
       roomType,
       "members.user": {
         $all: [ userId, targetUserId ]
       }
-    };
-  } else {
-    queryCondition = {
-      roomType,
-      "members.user": userId
     };
   }
 

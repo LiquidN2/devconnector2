@@ -19,32 +19,34 @@ import Loading from './Loading';
 // Load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
-import { getNumConnectionsAsync } from '../actions/connectionActions';
-import { getCurrentUserPostCountAsync } from '../actions/postActions';
+import { getRoomsAsync } from '../actions/messageActions';
+
 
 class MessagePage extends Component {
   state = {
     username: '',
     message: '',
-    messages: []
+    messages: [],
+    roomId: ''
   };
 
-  // socket = io('/');
 
   componentDidMount = () => {
-    // connectionNotify(() => {
-    //   console.log('connected to server')
-    // })
-
     setAuthToken(localStorage.getItem('token'));
     // get current user
     if (!this.props.user._id) {
       this.props.setCurrentUserAsync();
     }
+
+    // get all rooms
+    if (this.props.room.all.length === 0) {
+      this.props.getRoomsAsync('oneonone', undefined);
+    }
+
+    // console.log('Message Page Mount');
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    
   }
   
   render() {
@@ -55,8 +57,10 @@ class MessagePage extends Component {
         <section className="section-messages">
           <div className="container row">
             <div className="message-container u-margin-top-3rem">
-              <MessageHistory />
-              <MessageConversation conversationId={this.props.user._id}/>
+              <MessageHistory room={this.props.room}/>
+              <MessageConversation 
+                roomId={this.props.match.params.roomId}
+              />
               <MessageSender />
             </div>
           </div>
@@ -67,11 +71,13 @@ class MessagePage extends Component {
 };
 
 const mapStateToProps = state => ({
-  user: state.user.user
-})
+  user: state.user.user,
+  room: state.room
+});
 
 const mapDispatchToProps = {
-  setCurrentUserAsync
-}
+  setCurrentUserAsync,
+  getRoomsAsync
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagePage)

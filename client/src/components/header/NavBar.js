@@ -33,7 +33,8 @@ export default class NavBar extends Component {
           urlLabel: 'Company'
         }];
         break;
-
+      
+      case '/messages/room/:roomId':
       case '/messages':
         links = [{
           urlValue: '/messages',

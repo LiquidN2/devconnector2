@@ -13,6 +13,8 @@ import connectionReducer from './connectionsReducer';
 import fileReducer from './fileReducer';
 import searchReducer from './searchReducer';
 import filterReducer from './filterReducer';
+import roomReducer from './roomReducer';
+import messageReducer from './messageReducer';
 
 import visitingProfileReducer from './visitingProfileReducer';
 import visitingConnectionsReducer from './visitingConnectionsReducer';
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   filters: filterReducer,
   files: fileReducer,
   connections: connectionReducer,
+  room: roomReducer,
+  message: messageReducer,
   visitingProfile: visitingProfileReducer,
   visitingConnections: visitingConnectionsReducer,
   visitingPosts: visitingPostsReducer

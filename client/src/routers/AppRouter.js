@@ -43,6 +43,7 @@ const AppRouter = () => {
         
         <PrivateRoute path="/connections" component={ConnectionPage} />
 
+        <PrivateRoute path="/messages/room/:roomId" component={MessagePage} />
         <PrivateRoute path="/messages" component={MessagePage} />
 
         <PrivateRoute path="/search" component={SearchPage} />

@@ -19,6 +19,8 @@ router.post(
   messageController.messageCreate
 );
 
+
+
 // @route   GET api/messages/room/:roomId
 // @desc    Get All messages from a room
 // @access  Public
@@ -26,6 +28,15 @@ router.get(
   '/room/:roomId', 
   passport.authenticate('jwt', { session: false }),
   messageController.messageByRoomIdGet
+);
+
+// @route   GET api/messages/latest/room/:roomId
+// @desc    Get All messages from a room
+// @access  Public
+router.get(
+  '/latest/room/:roomId', 
+  passport.authenticate('jwt', { session: false }),
+  messageController.messageLatestByRoomIdGet
 );
 
 

@@ -25,8 +25,8 @@ class MessageForm extends Component {
     // console.log(this.state.message);
     const { message } = this.state; 
     socket.emit('newClientMessage', { 
-      userId: this.props.user._id, 
-      message 
+      user: this.props.user, 
+      text: message 
     });
 
     this.setState({
@@ -51,6 +51,7 @@ class MessageForm extends Component {
           onChange={this.handleInputChange}
           required={true}
           isDisabled={this.props.isFetchingUser}
+          placeholder="Send a message..."
         />
       </form>
     )
