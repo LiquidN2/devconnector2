@@ -1,16 +1,75 @@
 import React, { Component } from 'react';
 
-export default class messageHistoryItem extends Component {
+import { socket } from '../../socketIOClient/socketIOClient';
+
+import { NavLink } from 'react-router-dom';
+
+export default class MessageHistoryItem extends Component {
+  state = { isOnline: false }
+
+  handleStatusUpdate = users => {
+    const roomId = this.props._id;
+    const userId = this.props.withUserId._id;
+    const onlineUser = users.filter(user => {
+      return user.id === userId && user.room === roomId;
+    });
+
+    console.log(users);
+
+    if (onlineUser.length > 0) {
+      console.log(`${userId} is online`);
+      this.setState({ isOnline: true });
+            
+    } else {
+      console.log(`${userId} is offline`);
+    }
+  };
+
+  handleRemoveUser = user => {
+    const userId = this.props.withUserId._id;
+    if(user && user.id === userId) {
+      this.setState({ isOnline: false });
+    }
+  }
+
+  componentDidMount = () => {
+    // console.log(`Component Mounted. Request online status user ${this.props.withUserId._id} in room ${this.props._id}`);
+    const roomId = this.props._id;
+    const userId = this.props.user._id; //self user
+    const userName = this.props.user.name; // self user
+    socket.emit('join', {roomId, userId, userName});
+    socket.on('updateUserList', this.handleStatusUpdate);
+    socket.on('removeUser', this.handleRemoveUser);
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // console.log(`Component Updated. Request online status user ${this.props.withUserId._id} in room ${this.props._id}`);
+  }
+
+  componentWillUnmount = () => {
+    // socket.removeListener('updateUserList', this.handleStatusUpdate);
+    socket.removeListener('removeUser', this.handleRemoveUser);
+    socket.removeAllListeners()
+  }
+  
   render() {
-    const {name, avatar} = this.props.withUserId;
+    let itemClassName = "message-history-item";
+    if (this.state.isOnline) {
+      itemClassName = itemClassName + " message-history-item--online"
+    }
+
     return (
-      <div className="message-history-item">
-        <img src={avatar} alt={name} className="message-history-item__user-photo" />
+      <NavLink
+        to={`/messages/room/${this.props._id}`}
+        className={itemClassName}
+        activeClassName="message-history-item--active"
+      >
+        <img src={this.props.withUserId.avatar} alt={this.props.withUserId.name} className="message-history-item__user-photo" />
         <div className="message-history-item__content">
-          <p className="message-history-item__user-name">{name}</p>
+          <p className="message-history-item__user-name">{this.props.withUserId.name}</p>
           <p className="message-history-item__text">Lorem ipsum dolor sit amet kosa...</p>
         </div>
-      </div>
+      </NavLink>
     )
   }
 }

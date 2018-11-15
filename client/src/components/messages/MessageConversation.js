@@ -15,36 +15,37 @@ import {
 import Loading from '../Loading';
 
 class MessageConversation extends PureComponent {
-  state = { 
-    roomId: '', 
-    messages: []
-  };
+  // state = { 
+  //   roomId: '', 
+  //   messages: []
+  // };
 
+  // handle new message emitted from socket.io server
   handleNewServerMessage = message => {
-    // this.setState(prevState => ({
-    //   messages: [
-    //     ...prevState.messages,
-    //     message
-    //   ]
-    // }));
     this.props.addNewMessage(message);
   };
 
+  // scroll to the latest message at the bottom
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" });
   }
 
   componentDidMount = () => {
-    // fetch messages
-    this.props.getMessagesByRoomIdAsync(this.props.roomId);
+    const { roomId, message, user } = this.props;
+
+    // fetch messages from DB
+    if(!message[roomId] || message[roomId].length === 0){
+      this.props.getMessagesByRoomIdAsync(roomId);
+    }
+
+    // this.props.getMessagesByRoomIdAsync(this.props.roomId);
     
     this.setState(prevState => ({
-      messages: this.props.message.messages
+      messages: message.messages
     }))
     
-    // tell server room id
-    socket.emit('join', this.props.roomId);
-    
+    // socket.emit('join', {roomId, userId: user._id, userName: user.name});
+        
     // listen to event from server
     socket.on('newServerMessage', this.handleNewServerMessage);
 
@@ -52,12 +53,18 @@ class MessageConversation extends PureComponent {
   };
   
   componentDidUpdate = (prevProps, prevState) => {
+    // const { roomId, message, user } = this.props;
+
+    // if(prevProps.roomId !== this.props.roomId && !prevProps.user && this.props.user) {
+    //   console.log('should join room')
+    // }
+
     this.scrollToBottom();
   }
   
   componentWillUnmount = () => {
-    // socket.removeListener('newServerMessage', this.handleNewServerMessage)
-    socket.removeAllListeners();
+    socket.removeListener('newServerMessage', this.handleNewServerMessage)
+    // socket.removeAllListeners();
     this.setState(prevState => ({
       messages: []
     }));
@@ -65,10 +72,13 @@ class MessageConversation extends PureComponent {
   
   
   render() {
+    const { roomId, message, user } = this.props;
+    const displayedMessages = message[roomId] ? message[roomId] : [];
+
     return (
       <div className="message-conversation">
         {
-          this.props.message.isFetching ? (
+          message.isFetching ? (
             <div className="container u-margin-top-3rem u-margin-bottom-3rem">
               <Loading />
             </div>
@@ -78,10 +88,9 @@ class MessageConversation extends PureComponent {
         }
 
         <div className="message-conversation-incoming-outgoing">
-          {/* {this.props.roomId} */}
           {
-            this.props.message.messages.map((message, index) => {
-              if(message.user._id === this.props.user._id) {
+            displayedMessages.map((message, index) => {
+              if(message.user._id === user._id) {
                 return <MessageOutGoingItem key={index} {...message}/>
               } else {
                 return <MessageIncomingItem key={index} {...message}/>
@@ -89,7 +98,7 @@ class MessageConversation extends PureComponent {
               
             })
           }
-
+          
           <div 
             style={{ float:"left", clear: "both" }}
             ref={(el) => { this.messagesEnd = el; }}
@@ -97,14 +106,14 @@ class MessageConversation extends PureComponent {
           </div>
         </div>
 
-        <MessageForm />
+        <MessageForm roomId={roomId}/>
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.user.user,
+  // user: state.user.user,
   message: state.message
 });
 

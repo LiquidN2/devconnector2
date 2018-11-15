@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
+
+import { socket } from '../../socketIOClient/socketIOClient';
+
 
 import Loading from '../Loading';
 import MessageSearchForm from '../form/MessageSearchForm';
@@ -8,6 +11,9 @@ import MessageHistoryItem from './MessageHistoryItem';
 export default class MessageHistory extends Component {
   componentDidMount = () => {
     // console.log('history comp did mount')
+    // socket.on('updateUserList', users => {
+    //   console.log(users)
+    // })
   }
   
   render() {
@@ -31,29 +37,9 @@ export default class MessageHistory extends Component {
         }
 
         <div className="message-history-items-container">
-       
           {
-            // this.props.room.all.map(room => {
-            //   return <MessageHistoryItem key={room._id} {...room} />
-            // })
-
             this.props.room.all.map(room => {
-              const { name, avatar } = room.withUserId; 
-              return (
-                <NavLink 
-                  to={`/messages/room/${room._id}`} 
-                  key={room._id}
-                  className="message-history-item"
-                  activeClassName="message-history-item--active"
-                >
-                  <img src={avatar} alt={name} className="message-history-item__user-photo" />
-                  <div className="message-history-item__content">
-                    <p className="message-history-item__user-name">{name}</p>
-                    <p className="message-history-item__text">Lorem ipsum dolor sit amet kosa...</p>
-                  </div>  
-                  {/* <MessageHistoryItem {...room} /> */}
-                </NavLink>
-              )
+              return <MessageHistoryItem key={room._id} user={this.props.user} {...room}/>
             })
           }
 

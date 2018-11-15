@@ -57,8 +57,12 @@ class MessagePage extends Component {
         <section className="section-messages">
           <div className="container row">
             <div className="message-container u-margin-top-3rem">
-              <MessageHistory room={this.props.room}/>
-              <MessageConversation 
+              <MessageHistory 
+                user={this.props.user}
+                room={this.props.room}
+              />
+              <MessageConversation
+                user={this.props.user} 
                 roomId={this.props.match.params.roomId}
               />
               <MessageSender />

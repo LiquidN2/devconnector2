@@ -24,9 +24,11 @@ class MessageForm extends Component {
     event.preventDefault();
     // console.log(this.state.message);
     const { message } = this.state; 
+    const { user, roomId } = this.props; 
     socket.emit('newClientMessage', { 
-      user: this.props.user, 
-      text: message 
+      user,
+      roomId, 
+      text: message,
     });
 
     this.setState({

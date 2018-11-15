@@ -42,7 +42,36 @@ const removeDuplicatesByProp = (arr, prop) => {
   return result;
 };
 
+const removeDuplicatedChatUser = chatUsers => {
+  const result = chatUsers.reduce((unique, o) => {
+
+    const isDuplicate = unique.some(obj => {
+      return obj.id === o.id && obj.room === o.room;
+    });
+    
+    if (!isDuplicate) {
+      unique.push(o);
+    }
+
+    return unique;
+  }, []);
+
+  return result;
+}
+
+// const removeDuplicatedChatUser = chatUsers => {
+//   const ids = chatUsers.map(elid => elid.id.toString());
+//   const rooms = chatUsers.map(elroom => elroom.room.toString());
+
+//   const uniqueChatUsers = chatUsers.filter((chatUser, index) => {
+//     return ids.indexOf(chatUser) === index && rooms.indexOf(chatUser) === index 
+//   });
+
+//   return uniqueChatUsers;
+// }
+
 module.exports = {
   removeDuplicatesByProp,
-  removeDuplicatesById
+  removeDuplicatesById,
+  removeDuplicatedChatUser
 };
