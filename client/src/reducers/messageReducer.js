@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { USER_LOGOUT } from '../constants/authActionTypes';
 
 import {
@@ -5,13 +6,21 @@ import {
   MESSAGES_BY_ROOM_ID_ERRORS,
   MESSAGES_BY_ROOM_ID_SUCCESS,
 
-  ADD_NEW_MESSAGE
+  ADD_NEW_MESSAGE,
+
+  ADD_OWN_UNSAVED_MESSAGE,
+
+  SAVING_MESSAGES_REQUEST,
+  SAVING_MESSAGES_ERRORS,
+  SAVING_MESSAGES_SUCCESS
 } from '../constants/messageActionTypes';
 
 const initialState = {
   isFetching: false,
+  isSaving: false,
   roomId: '',
-  messages: []
+  // messages: [],
+  unsaved: []
 };
 
 const messageReducer = (state = initialState, action) => {
@@ -43,15 +52,17 @@ const messageReducer = (state = initialState, action) => {
       
       return fetchedResults;
     
+    case ADD_OWN_UNSAVED_MESSAGE:
+      action.message.date = moment.utc();
+      return {
+        ...state,
+        unsaved: [ ...state.unsaved, action.message ]
+      };
 
     case ADD_NEW_MESSAGE:
-      const newMsgAdded = {
-        ...state
-        // ,messages: [
-        //   ...state.messages,
-        //   action.message
-        // ]
-      }
+      action.message.date = moment.utc();
+
+      const newMsgAdded = {...state };
 
       if(action.message.roomId) {
         const { roomId } = action.message;
@@ -63,6 +74,25 @@ const messageReducer = (state = initialState, action) => {
       }
 
       return newMsgAdded;
+
+    case SAVING_MESSAGES_REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
+
+    case SAVING_MESSAGES_ERRORS:
+      return {
+        ...state,
+        isSaving: false
+      }
+
+    case SAVING_MESSAGES_SUCCESS:
+      return {
+        ...state,
+        isSaving: false,
+        unsaved: []
+      }
 
     case USER_LOGOUT:
       return { ...initialState }

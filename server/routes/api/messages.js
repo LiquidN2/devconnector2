@@ -19,7 +19,14 @@ router.post(
   messageController.messageCreate
 );
 
-
+// @route   POST api/messages
+// @desc    Create new message
+// @access  Public
+router.post(
+  '/many', 
+  passport.authenticate('jwt', { session: false }),
+  messageController.messageSaveMany
+);
 
 // @route   GET api/messages/room/:roomId
 // @desc    Get All messages from a room

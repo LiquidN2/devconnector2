@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import { socket } from '../../socketIOClient/socketIOClient';
 
-
 import { ControlledTextInput } from './ControlledInput';
+
+import { addOwnUnsavedMessage } from '../../actions/messageActions';
 
 class MessageForm extends Component {
   state = { message: '' };
@@ -25,11 +26,16 @@ class MessageForm extends Component {
     // console.log(this.state.message);
     const { message } = this.state; 
     const { user, roomId } = this.props; 
-    socket.emit('newClientMessage', { 
+
+    const newMessage = {
       user,
       roomId, 
-      text: message,
-    });
+      text: message
+    }
+
+    socket.emit('newClientMessage', newMessage);
+
+    this.props.addOwnUnsavedMessage(newMessage);
 
     this.setState({
       message: ''
@@ -37,6 +43,8 @@ class MessageForm extends Component {
   };
 
   render() {
+    const isDisabled = this.props.isFetchingUser || this.props.isSavingMessages;
+
     return (
       <form className="message-conversation-form" onSubmit={this.handleFormSubmit} >
         <button className="message-conversation-form__button">
@@ -52,7 +60,7 @@ class MessageForm extends Component {
           fieldValue={this.state.message}
           onChange={this.handleInputChange}
           required={true}
-          isDisabled={this.props.isFetchingUser}
+          isDisabled={isDisabled}
           placeholder="Send a message..."
         />
       </form>
@@ -65,4 +73,6 @@ const mapStateToProps = state => ({
   user: state.user.user
 });
 
-export default connect(mapStateToProps)(MessageForm);
+const mapDispatchToProps = { addOwnUnsavedMessage }
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageForm);

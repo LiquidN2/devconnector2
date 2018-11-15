@@ -19,15 +19,12 @@ import Loading from './Loading';
 // Load actions
 import { setCurrentUserAsync } from './../actions/userActions';
 import { getCurrentUserProfileAsync } from './../actions/profileActions';
-import { getRoomsAsync } from '../actions/messageActions';
+import { getRoomsAsync, saveMessagesAsync } from '../actions/messageActions';
 
 
 class MessagePage extends Component {
   state = {
-    username: '',
-    message: '',
-    messages: [],
-    roomId: ''
+    isSavingMessages: false
   };
 
 
@@ -47,6 +44,11 @@ class MessagePage extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
+    const { unsaved, isSaving } = this.props.message;
+    if(unsaved.length === 5 && !isSaving) {
+      // console.log('messages need saving...', unsaved);
+      this.props.saveMessagesAsync(unsaved);
+    }
   }
   
   render() {
@@ -64,6 +66,7 @@ class MessagePage extends Component {
               <MessageConversation
                 user={this.props.user} 
                 roomId={this.props.match.params.roomId}
+                isSavingMessages={this.props.message.isSaving}
               />
               <MessageSender />
             </div>
@@ -76,12 +79,14 @@ class MessagePage extends Component {
 
 const mapStateToProps = state => ({
   user: state.user.user,
-  room: state.room
+  room: state.room,
+  message: state.message
 });
 
 const mapDispatchToProps = {
   setCurrentUserAsync,
-  getRoomsAsync
+  getRoomsAsync,
+  saveMessagesAsync
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagePage)

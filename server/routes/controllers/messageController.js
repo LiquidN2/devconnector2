@@ -40,6 +40,7 @@ const messageByRoomIdGet = (req, res) => {
   const { roomId } = req.params;
 
   Message.find({ roomId })
+    .sort({ date: 1 })
     .populate('user', ['_id', 'name', 'avatar'])
     .then(messages => {
       res.json(messages);
@@ -60,8 +61,22 @@ const messageLatestByRoomIdGet = (req, res) => {
     .catch(err => res.status(400).send());
 };
 
+const messageSaveMany = (req, res) => {
+  const { unsaved } = req.body;
+  if (unsaved && unsaved.length > 0) {
+    Message.insertMany(unsaved)
+      .then(docs => {
+        if (docs) {
+          res.json(docs);
+        }
+      })
+      .catch(err => res.status(400).send());
+  }
+}
+
 module.exports = { 
   messageCreate,
   messageByRoomIdGet,
-  messageLatestByRoomIdGet 
+  messageLatestByRoomIdGet,
+  messageSaveMany 
 };

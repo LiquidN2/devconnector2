@@ -106,7 +106,7 @@ class MessageConversation extends PureComponent {
           </div>
         </div>
 
-        <MessageForm roomId={roomId}/>
+        <MessageForm roomId={roomId} isSavingMessages={this.props.isSavingMessages} />
       </div>
     )
   }

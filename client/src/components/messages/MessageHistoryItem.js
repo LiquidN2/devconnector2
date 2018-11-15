@@ -14,14 +14,11 @@ export default class MessageHistoryItem extends Component {
       return user.id === userId && user.room === roomId;
     });
 
-    console.log(users);
+    // console.log(users);
 
     if (onlineUser.length > 0) {
-      console.log(`${userId} is online`);
+      // console.log(`${userId} is online`);
       this.setState({ isOnline: true });
-            
-    } else {
-      console.log(`${userId} is offline`);
     }
   };
 
