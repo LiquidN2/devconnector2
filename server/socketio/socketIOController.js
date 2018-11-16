@@ -8,10 +8,6 @@ const socketIOController = (socket, io) => {
     if(userId && roomId) {
       chatUsers.addUser(socket.id, userId, userName, roomId);
       chatUsers.removeDuplicates();
-      // console.log(userId, 'joining room', roomId);
-      // socket.join(roomId);
-      // console.log(chatUsers.getUserList());
-      // io.to(roomId).emit('updateUserList', chatUsers.getUserList(roomId));
     }
 
     socket.join(roomId);
@@ -22,7 +18,11 @@ const socketIOController = (socket, io) => {
 
   socket.on('newClientMessage', message => {
     io.to(message.roomId).emit('newServerMessage', message);
+  });
 
+  socket.on('userIsTyping', ({user, roomId}) => {
+    // console.log(`user ${user._id} is typing in room ${roomId}`);
+    socket.broadcast.to(roomId).emit('userIsTyping', roomId);
   });
 
   // when client disconnect with chat server 

@@ -15,6 +15,7 @@ import searchReducer from './searchReducer';
 import filterReducer from './filterReducer';
 import roomReducer from './roomReducer';
 import messageReducer from './messageReducer';
+import chatProfileReducer from './chatProfileReducer';
 
 import visitingProfileReducer from './visitingProfileReducer';
 import visitingConnectionsReducer from './visitingConnectionsReducer';
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   connections: connectionReducer,
   room: roomReducer,
   message: messageReducer,
+  chatProfile: chatProfileReducer,
   visitingProfile: visitingProfileReducer,
   visitingConnections: visitingConnectionsReducer,
   visitingPosts: visitingPostsReducer

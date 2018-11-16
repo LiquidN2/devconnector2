@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
-// import { NavLink } from 'react-router-dom';
-
-import { socket } from '../../socketIOClient/socketIOClient';
-
 
 import Loading from '../Loading';
 import MessageSearchForm from '../form/MessageSearchForm';
 import MessageHistoryItem from './MessageHistoryItem';
 
 export default class MessageHistory extends Component {
-  componentDidMount = () => {
-    // console.log('history comp did mount')
-    // socket.on('updateUserList', users => {
-    //   console.log(users)
-    // })
-  }
-  
+
   render() {
     return (
       <div className="message-history">

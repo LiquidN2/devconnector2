@@ -19,6 +19,9 @@ class MessageForm extends Component {
       ...prevState,
       [name]: value
     }));
+
+    const { user, roomId } = this.props;
+    socket.emit('userIsTyping', { user, roomId });
   };
 
   handleFormSubmit = event => {

@@ -10,14 +10,12 @@ export default class MessageHistoryItem extends Component {
   handleStatusUpdate = users => {
     const roomId = this.props._id;
     const userId = this.props.withUserId._id;
+
     const onlineUser = users.filter(user => {
       return user.id === userId && user.room === roomId;
     });
 
-    // console.log(users);
-
     if (onlineUser.length > 0) {
-      // console.log(`${userId} is online`);
       this.setState({ isOnline: true });
     }
   };
@@ -30,7 +28,6 @@ export default class MessageHistoryItem extends Component {
   }
 
   componentDidMount = () => {
-    // console.log(`Component Mounted. Request online status user ${this.props.withUserId._id} in room ${this.props._id}`);
     const roomId = this.props._id;
     const userId = this.props.user._id; //self user
     const userName = this.props.user.name; // self user
@@ -39,14 +36,10 @@ export default class MessageHistoryItem extends Component {
     socket.on('removeUser', this.handleRemoveUser);
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    // console.log(`Component Updated. Request online status user ${this.props.withUserId._id} in room ${this.props._id}`);
-  }
-
   componentWillUnmount = () => {
     // socket.removeListener('updateUserList', this.handleStatusUpdate);
-    socket.removeListener('removeUser', this.handleRemoveUser);
-    socket.removeAllListeners()
+    // socket.removeListener('removeUser', this.handleRemoveUser);
+    socket.removeAllListeners();
   }
   
   render() {
@@ -61,9 +54,15 @@ export default class MessageHistoryItem extends Component {
         className={itemClassName}
         activeClassName="message-history-item--active"
       >
-        <img src={this.props.withUserId.avatar} alt={this.props.withUserId.name} className="message-history-item__user-photo" />
+        <img 
+          src={this.props.withUserId.avatar} 
+          alt={this.props.withUserId.name} 
+          className="message-history-item__user-photo"
+        />
         <div className="message-history-item__content">
-          <p className="message-history-item__user-name">{this.props.withUserId.name}</p>
+          <p className="message-history-item__user-name">
+            {this.props.withUserId.name}
+          </p>
           <p className="message-history-item__text">Lorem ipsum dolor sit amet kosa...</p>
         </div>
       </NavLink>

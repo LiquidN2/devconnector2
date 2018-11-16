@@ -4,19 +4,26 @@ import {
   GET_CURRENT_USER_PROFILE,
   GET_CURRENT_USER_PROFILE_ERRORS,
   SET_CURRENT_USER_PROFILE,
+
   CURRENT_USER_PROFILE_UPDATE_REQUEST,
   CURRENT_USER_PROFILE_UPDATE_ERRORS,
   CURRENT_USER_PROFILE_UPDATE_SUCCESS,
+
   CURRENT_USER_EXPERIENCES_REQUEST,
   CURRENT_USER_EXPERIENCES_ERRORS,
   CURRENT_USER_EXPERIENCES_SUCCESS,
+
   CURRENT_USER_EDUCATION_REQUEST,
   CURRENT_USER_EDUCATION_ERRORS,
   CURRENT_USER_EDUCATION_SUCCESS,
 
   GET_PROFILE_BY_USER_ID_REQUEST,
   GET_PROFILE_BY_USER_ID_ERRORS,
-  GET_PROFILE_BY_USER_ID_SUCCESS
+  GET_PROFILE_BY_USER_ID_SUCCESS,
+
+  CHAT_PROFILE_REQUEST,
+  CHAT_PROFILE_ERRORS,
+  CHAT_PROFILE_SUCCESS,
 } from './../constants/profileActionTypes';
 
 import history from '../routers/history';
@@ -250,21 +257,51 @@ const getProfileByUserIdSuccess = profile => ({
 });
 
 // GET PROFILE - Async
-export const getProfileByUserIdAsync = userId => {
-  return dispatch => {
-    dispatch(getProfileByUserIdRequest());
-    return axios.get(`/api/profile/user/${userId}`)
-      .then(res => {
-        if (res.status === 404) {
-          dispatch(getProfileByUserIdErrors(res.data));
-          history.push('/profile');  
-        } else {
-          dispatch(getProfileByUserIdSuccess(res.data));
-        }
-      })
-      .catch(err => {
-        dispatch(getProfileByUserIdErrors(err.response.data));
-        history.push('/profile'); 
-      });
-  }
+export const getProfileByUserIdAsync = userId => dispatch => {
+  dispatch(getProfileByUserIdRequest());
+  return axios.get(`/api/profile/user/${userId}`)
+    .then(res => {
+      if (res.status === 404) {
+        dispatch(getProfileByUserIdErrors(res.data));
+        history.push('/profile');
+      } else {
+        dispatch(getProfileByUserIdSuccess(res.data));
+      }
+    })
+    .catch(err => {
+      dispatch(getProfileByUserIdErrors(err.response.data));
+      history.push('/profile');
+    });
+};
+
+const chatProfileRequest = userId => ({
+  type: CHAT_PROFILE_REQUEST,
+  userId
+});
+
+const chatProfileErrors = errors => ({
+  type: CHAT_PROFILE_ERRORS,
+  errors
+});
+
+const chatProfileSuccess = (userId, profile) => ({
+  type: CHAT_PROFILE_SUCCESS,
+  userId,
+  profile
+});
+
+// GET PROFILE - Async
+export const getChatProfileAsync = userId => dispatch => {
+  dispatch(chatProfileRequest());
+  return axios.get(`/api/profile/user/${userId}`)
+    .then(res => {
+      if (res.status === 404) {
+        dispatch(chatProfileErrors(res.data));
+      } else {
+        dispatch(chatProfileSuccess(userId, res.data));
+      }
+    })
+    .catch(err => {
+      dispatch(chatProfileErrors(err.response.data));
+    });
 };

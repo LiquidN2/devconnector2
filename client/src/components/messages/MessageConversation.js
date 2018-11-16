@@ -9,17 +9,15 @@ import MessageOutGoingItem from './MessageOutgoingItem';
 
 import { 
   getMessagesByRoomIdAsync,
-  addNewMessage 
+  addNewMessage,
+  saveMessagesAsync 
 } from '../../actions/messageActions';
 
 import Loading from '../Loading';
 
 class MessageConversation extends PureComponent {
-  // state = { 
-  //   roomId: '', 
-  //   messages: []
-  // };
-
+  state = { userIsTyping: false };
+  
   // handle new message emitted from socket.io server
   handleNewServerMessage = message => {
     this.props.addNewMessage(message);
@@ -31,46 +29,39 @@ class MessageConversation extends PureComponent {
   }
 
   componentDidMount = () => {
-    const { roomId, message, user } = this.props;
+    const { roomId, message } = this.props;
 
     // fetch messages from DB
     if(!message[roomId] || message[roomId].length === 0){
       this.props.getMessagesByRoomIdAsync(roomId);
     }
 
-    // this.props.getMessagesByRoomIdAsync(this.props.roomId);
-    
-    this.setState(prevState => ({
-      messages: message.messages
-    }))
-    
-    // socket.emit('join', {roomId, userId: user._id, userName: user.name});
-        
     // listen to event from server
     socket.on('newServerMessage', this.handleNewServerMessage);
+
+    socket.on('userIsTyping', room => {
+      // console.log('user is typing');
+      if (room === roomId && !this.state.userIsTyping) {
+        this.setState({userIsTyping: true}, () => {
+          setTimeout(() => {
+            this.setState({ userIsTyping: false });
+          }, 2000);
+        });
+      }
+    });
+
 
     this.scrollToBottom();
   };
   
   componentDidUpdate = (prevProps, prevState) => {
-    // const { roomId, message, user } = this.props;
-
-    // if(prevProps.roomId !== this.props.roomId && !prevProps.user && this.props.user) {
-    //   console.log('should join room')
-    // }
-
     this.scrollToBottom();
   }
   
   componentWillUnmount = () => {
-    socket.removeListener('newServerMessage', this.handleNewServerMessage)
-    // socket.removeAllListeners();
-    this.setState(prevState => ({
-      messages: []
-    }));
+    socket.removeListener('newServerMessage', this.handleNewServerMessage);
   }
-  
-  
+    
   render() {
     const { roomId, message, user } = this.props;
     const displayedMessages = message[roomId] ? message[roomId] : [];
@@ -82,11 +73,9 @@ class MessageConversation extends PureComponent {
             <div className="container u-margin-top-3rem u-margin-bottom-3rem">
               <Loading />
             </div>
-          ) : (
-            null
-          )
+          ) : null
         }
-
+        { this.state.userIsTyping ? 'typing...' : null }
         <div className="message-conversation-incoming-outgoing">
           {
             displayedMessages.map((message, index) => {
@@ -113,13 +102,13 @@ class MessageConversation extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  // user: state.user.user,
   message: state.message
 });
 
 const mapDispatchToProps = {
   getMessagesByRoomIdAsync,
-  addNewMessage
+  addNewMessage,
+  saveMessagesAsync
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageConversation)
